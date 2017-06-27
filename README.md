@@ -1,6 +1,8 @@
 # Postcards
 > A CLI for the Swiss Postcard Creator
 
+This project is still in early development. Feedback and support appreciated.
+
 ## Install
 - Not yet available on pip
 
@@ -62,6 +64,33 @@ optional arguments:
 }
 
 ```
+
+### Examples
+```sh
+# Use postcards.py and set the postcard message and picture directly
+$ pyhton postcards.py --config /path/to/config.json \
+    --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
+    --message "Happy coding"
+
+
+# Encrypt user credentials to store in config.json
+python postcards.py --encrypt mykey mypassword
+
+
+# Use key to decrypt credentials
+$ pyhton postcards.py --config /path/to/config.json \
+    --key mykey \
+    --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
+    --message "Happy coding"
+
+# Mock postcard
+$ pyhton postcards.py --config /path/to/config.json \
+    --mock --trace
+    --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
+    --message "Happy coding"
+
+```
+
 
 ## Plugins
 
