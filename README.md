@@ -10,32 +10,30 @@ This project is still in early development. Feedback and support appreciated.
 ```
 python postcards.py --help
 
-Usage: postcards.py [-h] [--config-file CONFIG_FILE]
-                    [--accounts-file ACCOUNTS_FILE] [--image IMAGE]
-                    [--message MESSAGE] [--key KEY] [--username USERNAME]
-                    [--password PASSWORD] [--encrypt ENCRYPT ENCRYPT]
-                    [--decrypt DECRYPT DECRYPT] [--mock] [--trace]
+usage: postcards.py [-h] [--config CONFIG] [--accounts-file ACCOUNTS_FILE]
+                    [--picture PICTURE] [--message MESSAGE] [--key PASSWORD]
+                    [--username USERNAME] [--password PASSWORD]
+                    [--encrypt KEY CREDENTIAL] [--mock] [--trace] [--debug]
 
 Postcards is a CLI for the Swiss Postcard Creator
 
 optional arguments:
   -h, --help            show this help message and exit
-  --config-file CONFIG_FILE
-                        location to the json config file
+  --config CONFIG       location to the json config file
   --accounts-file ACCOUNTS_FILE
                         location to a dedicated json file containing postcard creator accounts
-  --image IMAGE         postcard picture. path to an URL or image on disk
+  --picture PICTURE     postcard picture. path to an URL or image on disk
   --message MESSAGE     postcard message
-  --key KEY             a key to decrypt credentials stored in config files: --key <password>
+  --key PASSWORD        a key to decrypt credentials stored in config files
   --username USERNAME   username credential. otherwise set in config or accounts file
   --password PASSWORD   password credential. otherwise set in config or accounts file
-  --encrypt ENCRYPT ENCRYPT
-                        encrypt credentials to store in config files: --encrypt <key> <credential>
-  --decrypt DECRYPT DECRYPT
-                        decrypt credentials: --decrypt <key> <credential>
+  --encrypt KEY CREDENTIAL
+                        encrypt credentials to store in config files
   --mock                do not submit postcard. useful for testing
   --trace               enable tracing. useful for testing
+  --debug               enable debug logs. useful for testing
 
+sourcecode: https://github.com/abertschi/postcards
 ```
 
 ## configuration file
@@ -68,7 +66,7 @@ optional arguments:
 ### Examples
 ```sh
 # Use postcards.py and set the postcard message and picture directly
-$ pyhton postcards.py --config /path/to/config.json \
+$ python postcards.py --config /path/to/config.json \
     --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
     --message "Happy coding"
 
@@ -78,13 +76,13 @@ python postcards.py --encrypt mykey mypassword
 
 
 # Use key to decrypt credentials
-$ pyhton postcards.py --config /path/to/config.json \
+$ python postcards.py --config /path/to/config.json \
     --key mykey \
     --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
     --message "Happy coding"
 
 # Mock postcard
-$ pyhton postcards.py --config /path/to/config.json \
+$ python postcards.py --config /path/to/config.json \
     --mock --trace
     --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
     --message "Happy coding"
