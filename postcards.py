@@ -158,7 +158,7 @@ class Postcards:
         parser.add_argument('--accounts-file', default=False,
                             help='location to a dedicated json file containing postcard creator accounts')
 
-        parser.add_argument('--image', default=False,
+        parser.add_argument('--picture', default=False,
                             help='postcard picture. path to an URL or image on disk')
         parser.add_argument('--message', default='',
                             help='postcard message')
