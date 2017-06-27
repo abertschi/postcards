@@ -17,7 +17,7 @@ class Postcards:
             print(self._encrypt(args.encrypt[0], args.encrypt[1]))
             exit(0)
 
-        config = self._read_config(args.config)
+        config = self._read_config(args.config_file)
         accounts = self._get_accounts_from_config(config)
 
         if not accounts:
@@ -158,7 +158,7 @@ class Postcards:
         parser.add_argument('--accounts-file', default=False,
                             help='location to a dedicated json file containing postcard creator accounts')
 
-        parser.add_argument('--image', default=False,
+        parser.add_argument('--picture', default=False,
                             help='postcard picture. path to an URL or image on disk')
         parser.add_argument('--message', default='',
                             help='postcard message')
