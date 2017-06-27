@@ -10,6 +10,7 @@ postcard_creator.Debug.debug = True
 
 
 class Postcards:
+
     def main(self, argv):
         args = self.get_argparser(argv)
         if args.encrypt:
@@ -41,9 +42,10 @@ class Postcards:
                   mock=bool(args.mock),
                   plugin_payload=config.get('payload'),
                   picture_stream=picture,
-                  message=str(message))
+                  message=str(message),
+                  cli_args=args)
 
-    def send(self, accounts, recipient, sender, mock=False, plugin_payload={}, message=None, picture_stream=None):
+    def send(self, accounts, recipient, sender, mock=False, plugin_payload={}, message=None, picture_stream=None, cli_args=None):
         pcc_wrapper = None
         for account in accounts:
             token = postcard_creator.Token()
@@ -58,7 +60,7 @@ class Postcards:
             exit(1)
 
         if self._is_plugin():
-            img_and_text = self.get_img_and_text(plugin_payload)
+            img_and_text = self.get_img_and_text(plugin_payload, cli_args=cli_args)
             message = img_and_text['text']
             picture_stream = img_and_text['img']
 
@@ -97,6 +99,7 @@ class Postcards:
             return json.load(f)
 
     def _read_picture(self, location):
+        raise Exception('not yet implemented')
         return ''
 
     def _encrypt(self, key, msg):
@@ -129,14 +132,23 @@ class Postcards:
         except Exception:
             return False
 
-    def get_img_and_text(self, plugin_payload):
+    def get_img_and_text(self, plugin_payload, cli_args):
         """
         To be overwritten by a plugin
         :param plugin_payload: plugin config from config file
+        :param parser args added in Postcards.encrich_parser(). See docs of argparse
         :return: an image and text
         """
         raise Exception('Dont run this class directly. Use a plugin instead')
         return {'img': None, 'text': None}
+
+    def enrich_parser(self, parser):
+        """
+        A plugin can add CLI options to the parser
+        :param parser:
+        :return: nothing
+        """
+        pass
 
     def get_argparser(self, argv):
         parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter,
@@ -170,9 +182,10 @@ class Postcards:
 
         parser.epilog = textwrap.dedent('''\
                 ''')
+        self.enrich_parser(parser)
         return parser.parse_args()
 
 
 if __name__ == '__main__':
-    smc = Postcards()
-    smc.main(sys.argv)
+    p = Postcards()
+    p.main(sys.argv)

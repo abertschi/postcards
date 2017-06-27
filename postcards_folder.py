@@ -8,7 +8,7 @@ import ntpath
 class FolderPlugin(Postcards):
     supported_ext = ['.jpg', '.jpeg', '.png']
 
-    def get_img_and_text(self, payload):
+    def get_img_and_text(self, payload, cli_args):
         if not payload['folder']:
             raise Exception("No folder set in payload in config.json")
 
@@ -48,6 +48,9 @@ class FolderPlugin(Postcards):
     def path_leaf(self, path):
         head, tail = ntpath.split(path)
         return tail or ntpath.basename(head)
+
+    def enrich_parser(self, parser):
+        pass
 
 
 if __name__ == '__main__':
