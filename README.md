@@ -143,7 +143,7 @@ See `postcards_pexels.py` or `postcards_folder.py` for a sample
 - [postcard_creator_wrapper](https://github.com/abertschi/postcard_creator_wrapper) - Python API wrapper around the Swiss Postcard Creator
 
 ## Author
-Andrin Bertschi
+Andrin Bertschi and [friends](https://github.com/abertschi/postcards/graphs/contributors)
 
 ## License
 
