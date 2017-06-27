@@ -203,16 +203,16 @@ class Postcards:
                             help='postcard picture. path to an URL or image on disk')
         parser.add_argument('--message', default='',
                             help='postcard message')
-        parser.add_argument('--key', nargs=1, default=False,
-                            help='a key to decrypt credentials stored in config files: --key <password>')
+        parser.add_argument('--key', nargs=1, metavar="PASSWORD", default=False,
+                            help='a key to decrypt credentials stored in config files')
 
         parser.add_argument('--username', default=False,
                             help='username credential. otherwise set in config or accounts file')
         parser.add_argument('--password', default=False,
                             help='password credential. otherwise set in config or accounts file')
 
-        parser.add_argument('--encrypt', action="store", nargs=2, default=False,
-                            help='encrypt credentials to store in config files: --encrypt <key> <credential>')
+        parser.add_argument('--encrypt', action="store", nargs=2, metavar=("KEY", "CREDENTIAL"), default=False,
+                            help='encrypt credentials to store in config files')
 
         parser.add_argument('--mock', action='store_true',
                             help='do not submit postcard. useful for testing')
