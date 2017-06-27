@@ -19,6 +19,10 @@ headers = {
 
 def get_random_image(keyword=None):
     url = get_random_image_url(keyword=keyword)
+    return read_from_url(url)
+
+
+def read_from_url(url):
     request = urllib.request.Request(url, None, headers)  # The assembled request
     return urllib.request.urlopen(request)
 

@@ -9,13 +9,11 @@ class FolderPlugin(Postcards):
     supported_ext = ['.jpg', '.jpeg', '.png']
 
     def get_img_and_text(self, payload, cli_args):
-        if not payload['folder']:
-            raise Exception("No folder set in payload in config.json")
+        if not payload.get('folder'):
+            print("No folder set in configuration")
+            exit(1)
 
-        folder = payload['folder']
-        if not os.path.isabs(folder):
-            abs_dir = os.path.dirname(os.path.realpath(__file__))
-            folder = os.path.join(abs_dir, folder)
+        folder = self._make_absolute_path(payload.get('folder'))
 
         candidates = []
         for file in os.listdir(folder):
@@ -25,33 +23,40 @@ class FolderPlugin(Postcards):
 
         if not candidates:
             print("No images in folder " + folder)
-            exit(0)
+            exit(1)
 
         img_name = random.choice(candidates)
         img_path = os.path.join(folder, img_name)
-        f = open(img_path, 'rb')
+        file = open(img_path, 'rb')
 
-        if payload['move']:
-            sent_folder = os.path.join(folder, 'sent')
-            if not os.path.exists(sent_folder):
-                os.makedirs(sent_folder)
-
-            img_name = self.path_leaf(img_path)
-            sent_img_path = os.path.join(sent_folder, img_name)
-            os.rename(img_path, sent_img_path)
+        if payload.get('move'):
+            self._move_to_sent(folder, img_path)
 
         return {
-            'img': f,
+            'img': file,
             'text': ''
         }
 
-    def path_leaf(self, path):
+    def _move_to_sent(self, picture_folder, image_path):
+        sent_folder = os.path.join(picture_folder, 'sent')
+        if not os.path.exists(sent_folder):
+            os.makedirs(sent_folder)
+
+        img_name = self._get_filename(image_path)
+        sent_img_path = os.path.join(sent_folder, img_name)
+        os.rename(image_path, sent_img_path)
+
+    def _get_filename(self, path):
         head, tail = ntpath.split(path)
         return tail or ntpath.basename(head)
 
-    def enrich_parser(self, parser):
-        pass
+    def _make_absolute_path(self, path):
+        if not os.path.isabs(path):
+            abs_dir = os.path.dirname(os.path.realpath(__file__))
+            return os.path.join(abs_dir, path)
+        else:
+            return path
 
 
 if __name__ == '__main__':
-    FolderPlugin().execute(sys.argv[1:])
+    FolderPlugin().main(sys.argv[1:])
