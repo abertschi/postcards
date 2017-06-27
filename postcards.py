@@ -17,7 +17,7 @@ class Postcards:
             print(self._encrypt(args.encrypt[0], args.encrypt[1]))
             exit(0)
 
-        config = self._read_config(args.config)
+        config = self._read_config(args.config_file)
         accounts = self._get_accounts_from_config(config)
 
         if not accounts:
