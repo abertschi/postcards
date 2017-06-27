@@ -143,10 +143,6 @@ class Postcards:
                                          description='Postcards is a CLI for the Swiss Postcard Creator')
         parser.add_argument('--config-file', default=os.path.dirname(os.path.realpath(__file__)) + '/config.json',
                             help='location to the json config file')
-        parser.add_argument('--recipient-file', default=False,
-                            help='location to a dedicated json file containing the recipient')
-        parser.add_argument('--sender-file', default=False,
-                            help='location to a dedicated json file containing the sender')
         parser.add_argument('--accounts-file', default=False,
                             help='location to a dedicated json file containing postcard creator accounts')
 
@@ -173,52 +169,6 @@ class Postcards:
                             help='enable tracing. useful for testing')
 
         parser.epilog = textwrap.dedent('''\
-
-                example use:
-
-                use a config file:
-                \tpostcards.py --config-file config.json 
-                \t             --key <key_to_decrypt_credentials> \\
-                \t             --message 'My postcard' --picture ./picture.jpg
-
-                pass credentials as arguments and use dedicated config files:
-                \tpostcards.py --sender-file sender.json \\
-                \t  --recipient-file recipient.json \\
-                \t  --username <username> \\
-                \t  --password <password> \\
-                \t  --message message \\
-                \t  --picture ./picture.jpg
-
-
-                sample config file:
-
-                {
-                  "recipient": {
-                    "firstname": "",
-                    "lastname": "",
-                    "street": "",
-                    "zipcode": "",
-                    "city": ""
-                  },
-                  "sender": {
-                    "firstname": "",
-                    "lastname": "",
-                    "street": "",
-                    "zipcode": "",
-                    "city": ""
-                  },
-                  "accounts": [
-                    {
-                      "username": "",
-                      "password": ""
-                    }
-                  ]
-                }
-
-
-                github: https://github.com/abertschi/postcards
-                Andrin Bertschi 2017, MIT
-
                 ''')
         return parser.parse_args()
 
