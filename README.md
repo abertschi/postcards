@@ -5,7 +5,7 @@
 - Not yet available on pip
 
 ## Usage
-```sh
+```
 python postcards.py --help 
 usage: postcards.py [-h] [--config-file CONFIG_FILE]
                     [--recipient-file RECIPIENT_FILE]
