@@ -93,7 +93,7 @@ class Postcards:
         accounts = []
         for account in config.get('accounts'):
             accounts.append({
-                'username': account.get('username') if not key else self._decrypt(key, account.get('username')),
+                'username': account.get('username'),
                 'password': account.get('password') if not key else self._decrypt(key, account.get('password'))
             })
         return accounts
