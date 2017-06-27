@@ -93,7 +93,12 @@ $ pyhton postcards.py --config /path/to/config.json \
 
 
 ## Plugins
+Note: Your picture (`--picture`) or the message text (`--message`) can always be overwritten by command line arguments if you use a plugin.
 
+Example: 
+```
+python postcards_folder.py --config ./config.json --message "This overwrites the message set by the plugin"
+```
 ### Send pictures from a folder
 Plugin name: `postcards_folder.py`  
 This plugin sends pictures from a folder
@@ -111,9 +116,21 @@ Add the following object to your configuration file (config.json)
 - folder: location to a folder containing your images (required)
 - move: set to false if sent picture should not be moved to a subdirectory `./sent/` (default: true)
 
+#### Example
+```
+python postcards_folder.py --config ./my-config.json
+```
+
 ### Send pictures from http://pexels.com
 - Plugin name: `postcards_pexels.py`  
 This plugin chooses random pictures from pexels.
+
+- No configuration is necessary in your `config.json` file
+
+#### Example
+```
+python postcards_pexels.py --config ./config.json
+```
 
 ### Build your own plugin
 See `postcards_pexels.py` or `postcards_folder.py` for a sample
