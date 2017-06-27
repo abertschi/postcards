@@ -23,6 +23,9 @@ class Postcards:
         if args.encrypt:
             print(self._encrypt(args.encrypt[0], args.encrypt[1]))
             exit(0)
+        elif args.decrypt:
+            print(self._decrypt(args.decrypt[0], args.decrypt[1]))
+            exit(0)
 
         config = self._read_config(args.config[0])
         accounts = self._get_accounts_from_config(config)
@@ -96,8 +99,8 @@ class Postcards:
         return accounts
 
     def validate_cli_args(self, args):
-        if not any([args.config, args.encrypt]):
-            print('error: The following arguments are required: --config, or --encrypt')
+        if not any([args.config, args.encrypt, args.decrypt]):
+            print('error: The following arguments are required: --config, --encrypt, or --decrypt')
             exit(1)
 
         if not self._is_plugin():
@@ -148,17 +151,17 @@ class Postcards:
             return str(os.path.join(os.getcwd(), path))
 
     def _encrypt(self, key, msg):
-        return self._encode(key, msg.encode('utf-8')).decode('utf-8')
+        return self._encode(key.encode('utf-8'), msg.encode('utf-8')).decode('utf-8')
 
     def _decrypt(self, key, msg):
-        return self._decode(key, msg.encode('utf-8'))
+        return self._decode(key.encode('utf-8'), msg.encode('utf-8')).decode('utf-8')
 
     def _encode(self, key, clear):
         # https://stackoverflow.com/questions/2490334/simple-way-to-encode-a-string-according-to-a-password
         enc = []
         for i in range(len(clear)):
             key_c = key[i % len(key)]
-            enc_c = (ord(chr(clear[i])) + ord(key_c)) % 256
+            enc_c = (clear[i] + key_c) % 256
             enc.append(enc_c)
         return base64.urlsafe_b64encode(bytes(enc))
 
@@ -167,8 +170,9 @@ class Postcards:
         enc = base64.urlsafe_b64decode(enc)
         for i in range(len(enc)):
             key_c = key[i % len(key)]
-            dec_c = chr((256 + enc[i] - ord(key_c)) % 256)
+            dec_c = (enc[i] - key_c) % 256
             dec.append(dec_c)
+        return bytes(dec)
 
     def _is_plugin(self):
         return not type(self).__name__ == 'Postcards'
@@ -213,6 +217,8 @@ class Postcards:
 
         parser.add_argument('--encrypt', action="store", nargs=2, metavar=("KEY", "CREDENTIAL"), default=False,
                             help='encrypt credentials to store in config files')
+        parser.add_argument('--decrypt', action="store", nargs=2, metavar=("KEY", "ENCRYPTED_TEXT"), default=False,
+                            help='decrypt credentials')
 
         parser.add_argument('--mock', action='store_true',
                             help='do not submit postcard. useful for testing')
