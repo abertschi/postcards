@@ -28,7 +28,7 @@ class Postcards:
             exit(0)
 
         config = self._read_config(args.config[0])
-        accounts = self._get_accounts_from_config(config)
+        accounts = self._get_accounts_from_config(config, key=args.key[0])
         self._validate_config(config, accounts)
 
         self.send(accounts=accounts,
@@ -210,7 +210,7 @@ class Postcards:
                             help='postcard picture. path to an URL or image on disk')
         parser.add_argument('--message', default='',
                             help='postcard message')
-        parser.add_argument('--key', nargs=1, metavar="PASSWORD", default=False,
+        parser.add_argument('--key', nargs=1, metavar="PASSWORD", default=(None,),
                             help='a key to decrypt credentials stored in config files')
 
         parser.add_argument('--username', default=False,
