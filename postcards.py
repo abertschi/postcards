@@ -33,7 +33,8 @@ class Postcards:
             exit(0)
 
         config = self._read_config(args.config[0])
-        accounts = self._get_accounts_from_config(config, key=args.key[0])
+        accounts = self._get_accounts_from_config(config=config, key=args.key[0],
+                                                  username=args.username, password=args.password)
         self._validate_config(config, accounts)
 
         self.send(accounts=accounts,
@@ -107,13 +108,20 @@ class Postcards:
                                        zip_code=sender.get('zipcode'),
                                        place=sender.get('city'))
 
-    def _get_accounts_from_config(self, config, key=None):
+    def _get_accounts_from_config(self, config, key=None, username=None, password=None):
         accounts = []
-        for account in config.get('accounts'):
+        if username and password:
+            self.logger.debug('using command line args as username and password')
             accounts.append({
-                'username': account.get('username'),
-                'password': account.get('password') if not key else self._decrypt(key, account.get('password'))
+                'username': username,
+                'password': password
             })
+        else:
+            for account in config.get('accounts'):
+                accounts.append({
+                    'username': account.get('username'),
+                    'password': account.get('password') if not key else self._decrypt(key, account.get('password'))
+                })
         return accounts
 
     def validate_cli_args(self, args):
@@ -256,9 +264,9 @@ class Postcards:
         parser.add_argument('--key', nargs=1, metavar="PASSWORD", default=(None,),
                             help='a key to decrypt credentials stored in config files')
 
-        parser.add_argument('--username', default=False,
+        parser.add_argument('--username', default=None, type=str,
                             help='username credential. otherwise set in config or accounts file')
-        parser.add_argument('--password', default=False,
+        parser.add_argument('--password', default=None, type=str,
                             help='password credential. otherwise set in config or accounts file')
 
         parser.add_argument('--encrypt', action="store", nargs=2, metavar=("KEY", "CREDENTIAL"), default=False,
