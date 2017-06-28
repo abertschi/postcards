@@ -1,30 +1,35 @@
-from postcard_creator import postcard_creator
 import sys
+import logging
+
+# logging config needs to be before other imports
+# in order not to be overwritten
+LOGGING_TRACE_LVL = 5
+logging.basicConfig(stream=sys.stdout, level=logging.INFO,
+                    format='%(name)s (%(levelname)s): %(message)s')
+
+from postcard_creator import postcard_creator
 import base64
 import json
 import os
-import argparse, textwrap
+import argparse
 from argparse import RawTextHelpFormatter
 import urllib
 
 
 class Postcards:
+    def __init__(self, logger=None):
+        self.logger = self._create_logger(logger)
+
     def main(self, argv):
         args = self.get_argparser(argv)
+        self._configure_logging(self.logger, args.verbose_count)
         self.validate_cli_args(args=args)
 
-        postcard_creator.Debug.debug = True  # always true?
-        if args.trace:
-            postcard_creator.Debug.debug = True
-            postcard_creator.Debug.trace = True
-        if args.debug:
-            postcard_creator.Debug.debug = True
-
         if args.encrypt:
-            print(self._encrypt(args.encrypt[0], args.encrypt[1]))
+            self.encrypt_credential(args.encrypt[0], args.encrypt[1])
             exit(0)
         elif args.decrypt:
-            print(self._decrypt(args.decrypt[0], args.decrypt[1]))
+            self.decrypt_credential(args.decrypt[0], args.decrypt[1])
             exit(0)
 
         config = self._read_config(args.config[0])
@@ -43,6 +48,7 @@ class Postcards:
     def send(self, accounts, recipient, sender, mock=False, plugin_payload={},
              message=None, picture_stream=None, cli_args=None):
 
+        self.logger.info('checking for valid accounts')
         pcc_wrapper = None
         for account in accounts:
             token = postcard_creator.Token()
@@ -50,10 +56,11 @@ class Postcards:
                 pcc = postcard_creator.PostcardCreator(token)
                 if pcc.has_free_postcard():
                     pcc_wrapper = pcc
+                    self.logger.info(f'account {account.get("username")} is valid')
                     break
 
         if not pcc_wrapper:
-            print('error: No valid account given. Run later again or check accounts.')
+            self.logger.error('no valid account given. run later again or check accounts.')
             exit(1)
 
         if self._is_plugin():
@@ -70,12 +77,21 @@ class Postcards:
                                          picture_stream=picture_stream)
 
         # Never send postcard, because postcard_wrapper is not yet working correctly
+        self.logger.info('uploading postcard to server')
         pcc_wrapper.send_free_card(card, mock_send=True)
 
-        if not mock:
-            print('Postcard sent!')
+        if mock or True:  # TODO: never send postcards until wrapper works
+            self.logger.info('postcard not sent because of mock=True')
         else:
-            print('Postcard not sent because of mock=True')
+            self.logger.info('postcard is successfully sent')
+
+    def encrypt_credential(self, key, credential):
+        self.logger.info('encrypted credential:')
+        self.logger.info(self._encrypt(key, credential))
+
+    def decrypt_credential(self, key, credential):
+        self.logger.info('decrypted credential:')
+        self.logger.info(self._decrypt(key, credential))
 
     def _create_recipient(self, recipient):
         return postcard_creator.Recipient(prename=recipient.get('firstname'),
@@ -102,27 +118,29 @@ class Postcards:
 
     def validate_cli_args(self, args):
         if not any([args.config, args.encrypt, args.decrypt]):
-            print('error: The following arguments are required: --config, --encrypt, or --decrypt')
+            self.logger.error('the following arguments are required: --config, --encrypt, or --decrypt')
             exit(1)
 
         if not self._is_plugin():
             if not args.picture and args.config:
-                print('error: No picture set. Run a plugin or set --picture')
+                self.logger.error('picture not set with --picture')
                 exit(1)
 
     def _validate_config(self, config, accounts):
         if not accounts:
-            print('error: No account set in config/accounts file')
+            self.logger.error('no account set in config/accounts file')
             exit(1)
 
         if not config.get('recipient'):
-            print('error: No recipient sent in config file')
+            self.logger.error('no recipient sent in config file')
             exit(1)
 
     def _read_config(self, location):
         location = self._make_absolute_path(location)
+        self.logger.info('reading config file ' + location)
+
         if not os.path.isfile(location):
-            print('error: Config file not found at ' + location)
+            self.logger.fatal('config file not found at ' + location)
             exit(1)
 
         with open(location) as f:
@@ -137,13 +155,16 @@ class Postcards:
                 'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
                 'Accept-Encoding': 'none',
                 'Accept-Language': 'en-US,en;q=0.8',
-                'Connection': 'keep-alive'}
+                'Connection': 'keep-alive'
+            }
+            self.logger.debug('reading picture from the internet at ' + location)
             request = urllib.request.Request(location, None, headers)
             return urllib.request.urlopen(request)
         else:
             location = self._make_absolute_path(location)
+            self.logger.debug('reading picture from ' + location)
             if not os.path.isfile(location):
-                print('error: Picture not found at ' + location)
+                self.logger.error('picture not found at ' + location)
                 exit(1)
             return open(location, 'rb')
 
@@ -180,6 +201,25 @@ class Postcards:
     def _is_plugin(self):
         return not type(self).__name__ == 'Postcards'
 
+    def _create_logger(self, logger):
+        logging.addLevelName(LOGGING_TRACE_LVL, 'TRACE')
+        logger = logger or logging.getLogger('postcards')
+        setattr(logger, 'trace', lambda *args: logger.log(LOGGING_TRACE_LVL, *args))
+        return logger
+
+    def _configure_logging(self, logger, verbose_count=0):
+        # set log level to INFO going more verbose for each new -v
+        # most verbose is level trace which is 5
+        logger.setLevel(int(max(2.0 - verbose_count, 0.5) * 10))
+
+        api_wrapper_logger = logging.getLogger('postcard_creator')
+        if logger.level <= logging.DEBUG:
+            postcard_creator.Debug.debug = True
+            api_wrapper_logger.setLevel(logging.DEBUG)
+        if logger.level <= LOGGING_TRACE_LVL:
+            api_wrapper_logger.setLevel(5)
+            postcard_creator.Debug.trace = True
+
     def get_img_and_text(self, plugin_payload, cli_args):
         """
         To be overwritten by a plugin
@@ -197,6 +237,9 @@ class Postcards:
         :return: nothing
         """
         pass
+
+    def get_logger(self):
+        return self.logger
 
     def get_argparser(self, argv):
         parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter,
@@ -225,14 +268,12 @@ class Postcards:
 
         parser.add_argument('--mock', action='store_true',
                             help='do not submit postcard. useful for testing')
-        parser.add_argument('--trace', action='store_true',
-                            help='enable tracing. useful for testing')
-        parser.add_argument('--debug', action='store_true',
-                            help='enable debug logs. useful for testing')
 
-        parser.epilog = textwrap.dedent('''\
-                sourcecode: https://github.com/abertschi/postcards
-                    ''')
+        parser.add_argument("-v", "--verbose", dest="verbose_count",
+                            action="count", default=0,
+                            help="increases log verbosity for each occurrence.")
+
+        parser.epilog = 'sourcecode: https://github.com/abertschi/postcards'
         self.enrich_parser(parser)
         return parser.parse_args()
 
