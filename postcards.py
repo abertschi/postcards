@@ -28,7 +28,7 @@ class Postcards:
             exit(0)
 
         config = self._read_config(args.config[0])
-        accounts = self._get_accounts_from_config(config)
+        accounts = self._get_accounts_from_config(config, key=args.key[0])
         self._validate_config(config, accounts)
 
         self.send(accounts=accounts,
