@@ -150,9 +150,12 @@ class Postcards:
         if not os.path.isfile(location):
             self.logger.fatal('config file not found at ' + location)
             exit(1)
-
-        with open(location) as f:
-            return json.load(f)
+        try:
+            with open(location) as f:
+                return json.load(f)
+        except Exception as e:
+            self.logger.error('can not parse config file ' + location + '. is it valid json ?')
+            exit(1)
 
     def _read_picture(self, location):
         if location.startswith('http'):
