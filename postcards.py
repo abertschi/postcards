@@ -37,7 +37,7 @@ class Postcards:
                   mock=bool(args.mock),
                   plugin_payload=config.get('payload'),
                   picture_stream=self._read_picture(args.picture) if args.picture else None,
-                  message=str(args.message),
+                  message=args.message,
                   cli_args=args)
 
     def send(self, accounts, recipient, sender, mock=False, plugin_payload={},
@@ -58,14 +58,16 @@ class Postcards:
 
         if self._is_plugin():
             img_and_text = self.get_img_and_text(plugin_payload, cli_args=cli_args)
-            message = img_and_text['text']
-            picture_stream = img_and_text['img']  # TODO use tuples instead
+
+            if not message:
+                message = img_and_text['text']
+            if not picture_stream:
+                picture_stream = img_and_text['img']
 
         card = postcard_creator.Postcard(message=message,
                                          recipient=self._create_recipient(recipient),
                                          sender=self._create_sender(sender),
                                          picture_stream=picture_stream)
-
 
         # Never send postcard, because postcard_wrapper is not yet working correctly
         pcc_wrapper.send_free_card(card, mock_send=True)
@@ -129,7 +131,8 @@ class Postcards:
     def _read_picture(self, location):
         if location.startswith('http'):
             headers = {
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) ' +
+                              'Chrome/23.0.1271.64 Safari/537.11',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
                 'Accept-Encoding': 'none',
