@@ -268,10 +268,6 @@ class Postcards:
 
         parser.add_argument('--mock', action='store_true',
                             help='do not submit postcard. useful for testing')
-        parser.add_argument('--trace', action='store_true',
-                            help='enable tracing. useful for testing')
-        parser.add_argument('--debug', action='store_true',
-                            help='enable debug logs. useful for testing')
 
         parser.add_argument("-v", "--verbose", dest="verbose_count",
                             action="count", default=0,
