@@ -22,17 +22,14 @@ class Postcards:
 
     def main(self, argv):
         args = self.get_argparser(argv)
-
-        self._config_logging(self.logger, args.verbose_count)
+        self._configure_logging(self.logger, args.verbose_count)
         self.validate_cli_args(args=args)
 
         if args.encrypt:
-            self.logger.info('encrypted credential:')
-            self.logger.info(self._encrypt(args.encrypt[0], args.encrypt[1]))
+            self.encrypt_credential(args.encrypt[0], args.encrypt[1])
             exit(0)
         elif args.decrypt:
-            self.logger.info('decrypted credential:')
-            self.logger.info(self._decrypt(args.decrypt[0], args.decrypt[1]))
+            self.decrypt_credential(args.decrypt[0], args.decrypt[1])
             exit(0)
 
         config = self._read_config(args.config[0])
@@ -83,10 +80,18 @@ class Postcards:
         self.logger.info('uploading postcard to server')
         pcc_wrapper.send_free_card(card, mock_send=True)
 
-        if mock:
+        if mock or True:  # TODO: never send postcards until wrapper works
             self.logger.info('postcard not sent because of mock=True')
         else:
             self.logger.info('postcard is successfully sent')
+
+    def encrypt_credential(self, key, credential):
+        self.logger.info('encrypted credential:')
+        self.logger.info(self._encrypt(key, credential))
+
+    def decrypt_credential(self, key, credential):
+        self.logger.info('decrypted credential:')
+        self.logger.info(self._decrypt(key, credential))
 
     def _create_recipient(self, recipient):
         return postcard_creator.Recipient(prename=recipient.get('firstname'),
@@ -152,10 +157,12 @@ class Postcards:
                 'Accept-Language': 'en-US,en;q=0.8',
                 'Connection': 'keep-alive'
             }
+            self.logger.debug('reading picture from the internet at ' + location)
             request = urllib.request.Request(location, None, headers)
             return urllib.request.urlopen(request)
         else:
             location = self._make_absolute_path(location)
+            self.logger.debug('reading picture from ' + location)
             if not os.path.isfile(location):
                 self.logger.error('picture not found at ' + location)
                 exit(1)
@@ -200,14 +207,17 @@ class Postcards:
         setattr(logger, 'trace', lambda *args: logger.log(LOGGING_TRACE_LVL, *args))
         return logger
 
-    def _config_logging(self, logger, verbose_count=0):
+    def _configure_logging(self, logger, verbose_count=0):
         # set log level to INFO going more verbose for each new -v
         # most verbose is level trace which is 5
         logger.setLevel(int(max(2.0 - verbose_count, 0.5) * 10))
 
+        api_wrapper_logger = logging.getLogger('postcard_creator')
         if logger.level <= logging.DEBUG:
             postcard_creator.Debug.debug = True
+            api_wrapper_logger.setLevel(logging.DEBUG)
         if logger.level <= LOGGING_TRACE_LVL:
+            api_wrapper_logger.setLevel(5)
             postcard_creator.Debug.trace = True
 
     def get_img_and_text(self, plugin_payload, cli_args):
