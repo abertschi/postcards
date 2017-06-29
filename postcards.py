@@ -79,7 +79,11 @@ class Postcards:
 
         # Never send postcard, because postcard_wrapper is not yet working correctly
         self.logger.info('uploading postcard to server')
-        pcc_wrapper.send_free_card(card, mock_send=True)
+        try:
+            pcc_wrapper.send_free_card(card, mock_send=True)
+        except Exception as e:
+            self.logger.fatal('can not send postcard: ' + str(e))
+            raise e
 
         if mock or True:  # TODO: never send postcards until wrapper works
             self.logger.info('postcard not sent because of mock=True')
