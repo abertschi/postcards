@@ -33,8 +33,8 @@ class Postcards:
             exit(0)
 
         config = self._read_config(args.config[0])
-        accounts = self._get_accounts_from_config(config=config, key=args.key[0],
-                                                  username=args.username, password=args.password)
+        accounts = self._get_accounts(config=config, key=args.key[0],
+                                      username=args.username, password=args.password)
         self._validate_config(config, accounts)
 
         self.send(accounts=accounts,
@@ -108,7 +108,7 @@ class Postcards:
                                        zip_code=sender.get('zipcode'),
                                        place=sender.get('city'))
 
-    def _get_accounts_from_config(self, config, key=None, username=None, password=None):
+    def _get_accounts(self, config, key=None, username=None, password=None):
         accounts = []
         if username and password:
             self.logger.debug('using command line args as username and password')
@@ -142,6 +142,18 @@ class Postcards:
         if not config.get('recipient'):
             self.logger.error('no recipient sent in config file')
             exit(1)
+
+        recipient = config.get('recipient')
+        required = ['firstname', 'lastname', 'street', 'zipcode', 'city']
+        if not all(recipient.get(field) for field in required):
+            self.logger.error('recipient is invalid. required fields are ' + str(required))
+            exit(1)
+
+        sender = config.get('sender')
+        if sender:
+            if not all(sender.get(field) for field in required):
+                self.logger.error('sender is invalid. required fields are ' + str(required))
+                exit(1)
 
     def _read_config(self, location):
         location = self._make_absolute_path(location)
