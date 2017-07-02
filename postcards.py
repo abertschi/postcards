@@ -1,12 +1,8 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
 import sys
 import logging
-
-# logging config needs to be before other imports
-# in order not to be overwritten
-LOGGING_TRACE_LVL = 5
-logging.basicConfig(stream=sys.stdout, level=logging.INFO,
-                    format='%(name)s (%(levelname)s): %(message)s')
-
 from postcard_creator import postcard_creator
 import base64
 import json
@@ -14,6 +10,14 @@ import os
 import argparse
 from argparse import RawTextHelpFormatter
 import urllib
+
+if sys.version_info < (3, 0):
+    sys.stderr.write("Sorry, requires >= Python 3.x, not Python 2.x\n")
+    sys.exit(1)
+
+LOGGING_TRACE_LVL = 5
+logging.basicConfig(stream=sys.stdout, level=logging.INFO,
+                    format='%(name)s (%(levelname)s): %(message)s')
 
 
 class Postcards:
@@ -241,11 +245,9 @@ class Postcards:
 
         api_wrapper_logger = logging.getLogger('postcard_creator')
         if logger.level <= logging.DEBUG:
-            postcard_creator.Debug.debug = True
             api_wrapper_logger.setLevel(logging.DEBUG)
         if logger.level <= LOGGING_TRACE_LVL:
             api_wrapper_logger.setLevel(5)
-            postcard_creator.Debug.trace = True
 
     def get_img_and_text(self, plugin_payload, cli_args):
         """
