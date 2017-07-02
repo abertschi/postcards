@@ -13,7 +13,8 @@ python postcards.py --help
 usage: postcards.py [-h] [--config CONFIG] [--accounts-file ACCOUNTS_FILE]
                     [--picture PICTURE] [--message MESSAGE] [--key PASSWORD]
                     [--username USERNAME] [--password PASSWORD]
-                    [--encrypt KEY CREDENTIAL] [--mock] [--trace] [--debug]
+                    [--encrypt KEY CREDENTIAL] [--decrypt KEY ENCRYPTED_TEXT]
+                    [--mock] [-v]
 
 Postcards is a CLI for the Swiss Postcard Creator
 
@@ -29,9 +30,10 @@ optional arguments:
   --password PASSWORD   password credential. otherwise set in config or accounts file
   --encrypt KEY CREDENTIAL
                         encrypt credentials to store in config files
+  --decrypt KEY ENCRYPTED_TEXT
+                        decrypt credentials
   --mock                do not submit postcard. useful for testing
-  --trace               enable tracing. useful for testing
-  --debug               enable debug logs. useful for testing
+  -v, --verbose         increases log verbosity for each occurrence.
 
 sourcecode: https://github.com/abertschi/postcards
 ```
