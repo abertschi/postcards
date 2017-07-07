@@ -36,7 +36,7 @@ class Postcards:
             self.decrypt_credential(args.decrypt[0], args.decrypt[1])
             exit(0)
 
-        config = self._read_config(args.config[0])
+        config = self._read_config(args.config)
         accounts = self._get_accounts(config=config, key=args.key[0],
                                       username=args.username, password=args.password)
         self._validate_config(config, accounts)
@@ -84,7 +84,7 @@ class Postcards:
         # Never send postcard, because postcard_wrapper is not yet working correctly
         self.logger.info('uploading postcard to server')
         try:
-            pcc_wrapper.send_free_card(card, mock_send=True)
+            pcc_wrapper.send_free_card(card, mock_send=mock)
         except Exception as e:
             self.logger.fatal('can not send postcard: ' + str(e))
             raise e
@@ -138,7 +138,7 @@ class Postcards:
             exit(1)
 
         if not self._is_plugin():
-            if not args.picture and args.config:
+            if not args.picture and not any([args.encrypt, args.decrypt]):
                 self.logger.error('picture not set with --picture')
                 exit(1)
 
@@ -274,9 +274,9 @@ class Postcards:
         parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter,
                                          description='Postcards is a CLI for the Swiss Postcard Creator')
         parser.add_argument('--config', nargs=1, required=False, type=str,
-                            help='location to the json config file')
-        parser.add_argument('--accounts-file', default=False,
-                            help='location to a dedicated json file containing postcard creator accounts')
+                            help='location to the json config file', default='config.json')
+        # parser.add_argument('--accounts-file', default=False,
+        #                     help='location to a dedicated json file containing postcard creator accounts')
 
         parser.add_argument('--picture', default=False,
                             help='postcard picture. path to an URL or image on disk')
