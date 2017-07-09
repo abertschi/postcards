@@ -20,25 +20,33 @@ LOGGING_TRACE_LVL = 5
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                     format='%(name)s (%(levelname)s): %(message)s')
 
+DEFAULT_KEY = 'olMcxzq9Cq5lJpsoh4FvPKU'
+
 
 class Postcards:
     def __init__(self, logger=None):
         self.logger = self._create_logger(logger)
+        self.default_key = DEFAULT_KEY
+        try:
+            self.default_key = os.environ['POSTCARDS_KEY']
+        except KeyError:
+            pass
 
     def main(self, argv):
         args = self.get_argparser(argv)
         self._configure_logging(self.logger, args.verbose_count)
-        self.validate_cli_args(args=args)
+        self._validate_cli_args(args=args)
 
+        key_settings = self._parse_key(args)
         if args.encrypt:
-            self.encrypt_credential(args.encrypt[0], args.encrypt[1])
+            self.encrypt_credential(key_settings['key'], args.encrypt[0])
             exit(0)
         elif args.decrypt:
-            self.decrypt_credential(args.decrypt[0], args.decrypt[1])
+            self.decrypt_credential(key_settings['key'], args.decrypt[0])
             exit(0)
 
         config = self._read_config(args.config[0])
-        accounts = self._get_accounts(config=config, key=args.key[0],
+        accounts = self._get_accounts(config=config, key=key_settings['key'] if key_settings['uses_key'] else None,
                                       username=args.username, password=args.password)
         self._validate_config(config, accounts)
 
@@ -53,7 +61,6 @@ class Postcards:
 
     def send(self, accounts, recipient, sender, mock=False, plugin_payload={},
              message=None, picture_stream=None, cli_args=None):
-
         self.logger.info('checking for valid accounts')
         pcc_wrapper = None
         for account in accounts:
@@ -132,7 +139,7 @@ class Postcards:
                 })
         return accounts
 
-    def validate_cli_args(self, args):
+    def _validate_cli_args(self, args):
         if not any([args.config, args.encrypt, args.decrypt]):
             self.logger.error('the following arguments are required: --config, --encrypt, or --decrypt')
             exit(1)
@@ -141,6 +148,24 @@ class Postcards:
             if not args.picture and not any([args.encrypt, args.decrypt]):
                 self.logger.error('picture not set with --picture')
                 exit(1)
+
+    def _parse_key(self, args):
+        key = self.default_key
+        uses_key = True
+
+        if isinstance(args.key, tuple):
+            uses_key = False
+            self.logger.debug('using no key')
+        elif args.key is None:
+            key = self.default_key
+            self.logger.debug('using default key')
+        else:
+            key = args.key
+            self.logger.debug('using custom key')
+        return {
+            'uses_key': uses_key,
+            'key': key
+        }
 
     def _validate_config(self, config, accounts):
         if not accounts:
@@ -209,7 +234,11 @@ class Postcards:
         return self._encode(key.encode('utf-8'), msg.encode('utf-8')).decode('utf-8')
 
     def _decrypt(self, key, msg):
-        return self._decode(key.encode('utf-8'), msg.encode('utf-8')).decode('utf-8')
+        try:
+            return self._decode(key.encode('utf-8'), msg.encode('utf-8')).decode('utf-8')
+        except Exception as e:
+            self.logger.error('wrong key given, can not decrypt.')
+            exit(1)
 
     def _encode(self, key, clear):
         # https://stackoverflow.com/questions/2490334/simple-way-to-encode-a-string-according-to-a-password
@@ -282,18 +311,21 @@ class Postcards:
                             help='postcard picture. path to an URL or image on disk')
         parser.add_argument('--message', default='',
                             help='postcard message')
-        parser.add_argument('--key', nargs=1, metavar="PASSWORD", default=(None,),
-                            help='a key to decrypt credentials stored in config files')
 
         parser.add_argument('--username', default=None, type=str,
                             help='username credential. otherwise set in config or accounts file')
         parser.add_argument('--password', default=None, type=str,
                             help='password credential. otherwise set in config or accounts file')
 
-        parser.add_argument('--encrypt', action="store", nargs=2, metavar=("KEY", "CREDENTIAL"), default=False,
-                            help='encrypt credentials to store in config files')
-        parser.add_argument('--decrypt', action="store", nargs=2, metavar=("KEY", "ENCRYPTED_TEXT"), default=False,
-                            help='decrypt credentials')
+        parser.add_argument('--key', nargs='?', metavar="KEY", default=(None,),
+                            help='use this argument if your credentials are stored encrypted in config file. \n'
+                                 + 'set your custom key if you are not using default key. \n'
+                                 + '(i.e. --key PASSWORD instead of --key)')
+        parser.add_argument('--encrypt', action="store", nargs=1, metavar="CREDENTIAL", default=False,
+                            help='encrypt credentials with default key. \n' +
+                                 'use --key argument to use custom key.')
+        parser.add_argument('--decrypt', action="store", nargs=1, metavar="ENCRYPTED_TEXT", default=False,
+                            help='decrypt credentials with default key. use --key argument to use custom key.')
 
         parser.add_argument('--mock', action='store_true',
                             help='do not submit postcard. useful for testing')
