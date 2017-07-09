@@ -8,34 +8,32 @@ This project is still in early development. Feedback and support appreciated.
 
 ## Usage
 ```
-python postcards.py --help
-
-usage: postcards.py [-h] [--config CONFIG] [--accounts-file ACCOUNTS_FILE]
-                    [--picture PICTURE] [--message MESSAGE] [--key PASSWORD]
-                    [--username USERNAME] [--password PASSWORD]
-                    [--encrypt KEY CREDENTIAL] [--decrypt KEY ENCRYPTED_TEXT]
-                    [--mock] [-v]
+usage: postcards.py [-h] [--config CONFIG] [--picture PICTURE]
+                    [--message MESSAGE] [--username USERNAME]
+                    [--password PASSWORD] [--key [KEY]] [--encrypt CREDENTIAL]
+                    [--decrypt ENCRYPTED_TEXT] [--mock] [-v]
 
 Postcards is a CLI for the Swiss Postcard Creator
 
 optional arguments:
   -h, --help            show this help message and exit
-  --config CONFIG       location to the json config file
-  --accounts-file ACCOUNTS_FILE
-                        location to a dedicated json file containing postcard creator accounts
+  --config CONFIG       location to the json config file (default: ./config.json)
   --picture PICTURE     postcard picture. path to an URL or image on disk
   --message MESSAGE     postcard message
-  --key PASSWORD        a key to decrypt credentials stored in config files
   --username USERNAME   username credential. otherwise set in config or accounts file
   --password PASSWORD   password credential. otherwise set in config or accounts file
-  --encrypt KEY CREDENTIAL
-                        encrypt credentials to store in config files
-  --decrypt KEY ENCRYPTED_TEXT
-                        decrypt credentials
+  --key [KEY]           use this argument if your credentials are stored encrypted in config file. 
+                        set your custom key if you are not using default key. 
+                        (i.e. --key PASSWORD instead of --key)
+  --encrypt CREDENTIAL  encrypt credentials with default key. 
+                        use --key argument to use custom key.
+  --decrypt ENCRYPTED_TEXT
+                        decrypt credentials with default key. use --key argument to use custom key.
   --mock                do not submit postcard. useful for testing
   -v, --verbose         increases log verbosity for each occurrence.
 
 sourcecode: https://github.com/abertschi/postcards
+
 ```
 
 ## configuration file
