@@ -274,7 +274,7 @@ class Postcards:
         parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter,
                                          description='Postcards is a CLI for the Swiss Postcard Creator')
         parser.add_argument('--config', nargs=1, required=False, type=str,
-                            help='location to the json config file', default=['config.json'])
+                            help='location to the json config file (default: ./config.json)', default=['config.json'])
         # parser.add_argument('--accounts-file', default=False,
         #                     help='location to a dedicated json file containing postcard creator accounts')
 
