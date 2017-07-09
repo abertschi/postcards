@@ -7,13 +7,14 @@ cookies==2.2.1
 crypto==1.4.1
 Flask==0.12.2
 idna==2.5
+inflection==0.3.1
 itsdangerous==0.24
 Jinja2==2.9.6
 MarkupSafe==1.0
 Naked==0.1.31
 olefile==0.44
 Pillow==4.1.1
-postcard-creator==0.0.1a10
+postcard-creator==0.0.1a12
 py==1.4.34
 pycrypto==2.6.1
 pytest==3.1.2

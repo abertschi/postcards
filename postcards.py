@@ -10,6 +10,7 @@ import os
 import argparse
 from argparse import RawTextHelpFormatter
 import urllib
+import inflection
 
 if sys.version_info < (3, 0):
     sys.stderr.write("Sorry, requires >= Python 3.x, not Python 2.x\n")
@@ -233,7 +234,7 @@ class Postcards:
 
     def _create_logger(self, logger):
         logging.addLevelName(LOGGING_TRACE_LVL, 'TRACE')
-        logger = logger or logging.getLogger(type(self).__name__.lower())
+        logger = logger or logging.getLogger(inflection.underscore(type(self).__name__))
         setattr(logger, 'trace', lambda *args: logger.log(LOGGING_TRACE_LVL, *args))
         return logger
 
