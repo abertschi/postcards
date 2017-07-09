@@ -81,7 +81,6 @@ class Postcards:
                                          sender=self._create_sender(sender),
                                          picture_stream=picture_stream)
 
-        # Never send postcard, because postcard_wrapper is not yet working correctly
         self.logger.info('uploading postcard to server')
         try:
             pcc_wrapper.send_free_card(card, mock_send=mock)
@@ -89,7 +88,7 @@ class Postcards:
             self.logger.fatal('can not send postcard: ' + str(e))
             raise e
 
-        if mock or True:  # TODO: never send postcards until wrapper works
+        if mock:
             self.logger.info('postcard not sent because of mock=True')
         else:
             self.logger.info('postcard is successfully sent')
@@ -234,7 +233,7 @@ class Postcards:
 
     def _create_logger(self, logger):
         logging.addLevelName(LOGGING_TRACE_LVL, 'TRACE')
-        logger = logger or logging.getLogger('postcards')
+        logger = logger or logging.getLogger(type(self).__name__.lower())
         setattr(logger, 'trace', lambda *args: logger.log(LOGGING_TRACE_LVL, *args))
         return logger
 

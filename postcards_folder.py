@@ -5,12 +5,12 @@ import random
 import ntpath
 
 
-class FolderPlugin(Postcards):
+class PostcardsFolder(Postcards):
     supported_ext = ['.jpg', '.jpeg', '.png']
 
     def get_img_and_text(self, payload, cli_args):
         if not payload.get('folder'):
-            print("No folder set in configuration")
+            self.logger.error("no folder set in configuration")
             exit(1)
 
         folder = self._make_absolute_path(payload.get('folder'))
@@ -22,11 +22,14 @@ class FolderPlugin(Postcards):
                     candidates.append(file)
 
         if not candidates:
-            print("No images in folder " + folder)
+            self.logger.error("no images in folder " + folder)
             exit(1)
 
         img_name = random.choice(candidates)
         img_path = os.path.join(folder, img_name)
+        move_info = 'moving to sent folder' if payload.get('move') else 'no move'
+
+        self.logger.info(f'choosing image {img_path} ({move_info})')
         file = open(img_path, 'rb')
 
         if payload.get('move'):
@@ -41,10 +44,12 @@ class FolderPlugin(Postcards):
         sent_folder = os.path.join(picture_folder, 'sent')
         if not os.path.exists(sent_folder):
             os.makedirs(sent_folder)
+            self.logger.debug(f'creating folder {sent_folder}')
 
         img_name = self._get_filename(image_path)
         sent_img_path = os.path.join(sent_folder, img_name)
         os.rename(image_path, sent_img_path)
+        self.logger.debug(f'moving image from {image_path} to {sent_img_path}')
 
     def _get_filename(self, path):
         head, tail = ntpath.split(path)
@@ -59,4 +64,4 @@ class FolderPlugin(Postcards):
 
 
 if __name__ == '__main__':
-    FolderPlugin().main(sys.argv[1:])
+    PostcardsFolder().main(sys.argv[1:])
