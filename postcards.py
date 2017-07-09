@@ -36,7 +36,7 @@ class Postcards:
             self.decrypt_credential(args.decrypt[0], args.decrypt[1])
             exit(0)
 
-        config = self._read_config(args.config)
+        config = self._read_config(args.config[0])
         accounts = self._get_accounts(config=config, key=args.key[0],
                                       username=args.username, password=args.password)
         self._validate_config(config, accounts)
@@ -274,7 +274,7 @@ class Postcards:
         parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter,
                                          description='Postcards is a CLI for the Swiss Postcard Creator')
         parser.add_argument('--config', nargs=1, required=False, type=str,
-                            help='location to the json config file', default='config.json')
+                            help='location to the json config file', default=['config.json'])
         # parser.add_argument('--accounts-file', default=False,
         #                     help='location to a dedicated json file containing postcard creator accounts')
 

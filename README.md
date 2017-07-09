@@ -68,24 +68,20 @@ sourcecode: https://github.com/abertschi/postcards
 ### Examples
 ```sh
 # Use postcards.py and set the postcard message and picture directly
-$ python postcards.py --config /path/to/config.json \
+$ python postcards.py --config config.json \
     --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
     --message "Happy coding"
 
 
 # Encrypt user credentials to store in config.json
-python postcards.py --encrypt mykey mypassword
+$ python postcards.py --encrypt mykey mypassword
+> postcards (INFO): encrypted credential:
+> postcards (INFO): 2vLbxuzg8NrX3Q==
 
 
-# Use key to decrypt credentials
-$ python postcards.py --config /path/to/config.json \
+# Send a postcard with encrypted credentials in config.json
+$ python postcards.py --config config.json \
     --key mykey \
-    --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
-    --message "Happy coding"
-
-# Mock postcard
-$ python postcards.py --config /path/to/config.json \
-    --mock --trace
     --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
     --message "Happy coding"
 
