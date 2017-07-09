@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
 from postcards import Postcards
 from util.pexels import get_random_image_url, read_from_url
 import sys
