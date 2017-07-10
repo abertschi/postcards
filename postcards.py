@@ -11,6 +11,7 @@ import argparse
 from argparse import RawTextHelpFormatter
 import urllib
 import inflection
+import random
 
 if sys.version_info < (3, 0):
     sys.stderr.write("Sorry, requires >= Python 3.x, not Python 2.x\n")
@@ -48,6 +49,7 @@ class Postcards:
         config = self._read_config(args.config[0])
         accounts = self._get_accounts(config=config, key=key_settings['key'] if key_settings['uses_key'] else None,
                                       username=args.username, password=args.password)
+        random.shuffle(accounts)
         self._validate_config(config, accounts)
 
         self.send(accounts=accounts,
@@ -62,6 +64,7 @@ class Postcards:
     def send(self, accounts, recipient, sender, mock=False, plugin_payload={},
              message=None, picture_stream=None, cli_args=None):
         self.logger.info('checking for valid accounts')
+
         pcc_wrapper = None
         for account in accounts:
             token = postcard_creator.Token()
@@ -71,6 +74,12 @@ class Postcards:
                     pcc_wrapper = pcc
                     self.logger.info(f'account {account.get("username")} is valid')
                     break
+                else:
+                    next_quota = pcc.get_quota().get('next')
+                    self.logger.debug(f'account {account.get("username")} is invalid. ' +
+                                      f'new quota available after {next_quota}.')
+            else:
+                self.logger.warning(f'wrong user credentials for {account.get("username")}')
 
         if not pcc_wrapper:
             self.logger.error('no valid account given. run later again or check accounts.')
