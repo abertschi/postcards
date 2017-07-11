@@ -30,7 +30,7 @@ class PostcardsBingRandom(Postcards):
             self.logger.info('using custom keyword {}'.format(cli_args.keyword))
             imgs = self._fetch_img_urls(cli_args.keyword)
         else:
-            imgs = self._get_images_with_random_keyword()
+            imgs = self._get_images_for_random_keyword()
 
         if not imgs:
             self.logger.error('no images found for given keyword')
@@ -51,6 +51,7 @@ class PostcardsBingRandom(Postcards):
         found = False
         counter = 0
 
+        imgs = []
         while not found and counter < 10:
             keyword = self._get_search_term()
             self.logger.debug('trying to search for images with keyword=' + keyword)
@@ -62,6 +63,7 @@ class PostcardsBingRandom(Postcards):
             counter += 1
             if len(imgs) > 0:
                 found = True
+        return imgs
 
     def _get_search_term(self):
         try:
