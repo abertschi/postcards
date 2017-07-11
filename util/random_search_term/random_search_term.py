@@ -8,7 +8,7 @@ def get_random_search_term():
     http://www.diddly.com/random/
     note by author: "Feel free to copy this code, it sucks though"
 
-    Probably the ugliest code that ever past my clipboard :O
+    Probably the ugliest code I ever (re-) distributed on the internet :D
     :return: search term
 
     """
