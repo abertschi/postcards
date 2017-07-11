@@ -25,9 +25,7 @@ class PostcardsBingRandom(Postcards):
         pass
 
     def get_img_and_text(self, plugin_config, cli_args):
-
         imgs = []
-
         if cli_args.keyword:
             self.logger.info('using custom keyword {}'.format(cli_args.keyword))
             imgs = self._fetch_img_urls(cli_args.keyword)
@@ -35,12 +33,15 @@ class PostcardsBingRandom(Postcards):
             imgs = self._get_images_with_random_keyword()
 
         if not imgs:
-            self.logger.error('No images found for given keyword')
+            self.logger.error('no images found for given keyword')
             exit(1)
 
-        img = random.choice(imgs)[2]
-        self.logger.info('choosing image {}'.format(img))
+        if cli_args.keyword:
+            img = random.choice(imgs)[2]
+        else:
+            img = imgs[0][2]  # always choose first img because search key is random anyway
 
+        self.logger.info('choosing image {}'.format(img))
         return {
             'img': img,
             'text': ''
@@ -55,7 +56,6 @@ class PostcardsBingRandom(Postcards):
             self.logger.debug('trying to search for images with keyword=' + keyword)
 
             imgs = self._fetch_img_urls(keyword)
-            random.shuffle(imgs)
             self.logger.trace(imgs)
             self.logger.debug('fetched {} images'.format(len(imgs)))
 
