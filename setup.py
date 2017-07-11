@@ -30,7 +30,7 @@ setup(
     author='Andrin Bertschi',
     install_requires=reqs,
     description='',
-    packages=find_packages(),
+    packages=find_packages(exclude=("tmp",)),
     platforms='any',
     keywords='postcard swiss',
     classifiers=[
