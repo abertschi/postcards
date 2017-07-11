@@ -15,28 +15,27 @@ class PostcardsBingRandom(Postcards):
     """
     Get an arbitrary picture from the internet as postcard image.
     Note: image content may be inappropriate
+
+    Use flag --keyword <keyword> to search for specific images
     """
 
+    def enrich_parser(self, parser):
+        parser.add_argument('--keyword', default=None, type=str,
+                            help='use custom keyword to search for images')
+        pass
+
     def get_img_and_text(self, plugin_config, cli_args):
-        found = False
-        counter = 0
 
         imgs = []
-        while not found and counter < 10:
-            keyword = self._get_search_term()
-            self.logger.debug('using keyword=' + keyword)
 
-            imgs = self._fetch_img_urls(keyword)
-            random.shuffle(imgs)
-            self.logger.trace(imgs)
-            self.logger.debug('fetched {} images'.format(len(imgs)))
+        if cli_args.keyword:
+            self.logger.info('using custom keyword {}'.format(cli_args.keyword))
+            imgs = self._fetch_img_urls(cli_args.keyword)
+        else:
+            imgs = self._get_images_with_random_keyword()
 
-            counter += 1
-            if len(imgs) > 0:
-                found = True
-
-        if not found:
-            self.logger.error('no images found although {} times tried'.format(counter))
+        if not imgs:
+            self.logger.error('No images found for given keyword')
             exit(1)
 
         img = random.choice(imgs)[2]
@@ -46,6 +45,23 @@ class PostcardsBingRandom(Postcards):
             'img': img,
             'text': ''
         }
+
+    def _get_images_for_random_keyword(self):
+        found = False
+        counter = 0
+
+        while not found and counter < 10:
+            keyword = self._get_search_term()
+            self.logger.debug('trying to search for images with keyword=' + keyword)
+
+            imgs = self._fetch_img_urls(keyword)
+            random.shuffle(imgs)
+            self.logger.trace(imgs)
+            self.logger.debug('fetched {} images'.format(len(imgs)))
+
+            counter += 1
+            if len(imgs) > 0:
+                found = True
 
     def _get_search_term(self):
         try:
