@@ -11,7 +11,7 @@ import random
 import sys
 
 
-class PostcardsBingRandom(Postcards):
+class PostcardsRandom(Postcards):
     """
     Get an arbitrary picture from the internet as postcard image.
     Note: image may be inappropriate
@@ -108,4 +108,4 @@ class PostcardsBingRandom(Postcards):
 
 
 if __name__ == '__main__':
-    PostcardsBingRandom().main(sys.argv[1:])
+    PostcardsRandom().main(sys.argv[1:])
