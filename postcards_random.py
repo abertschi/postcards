@@ -14,7 +14,7 @@ import sys
 class PostcardsBingRandom(Postcards):
     """
     Get an arbitrary picture from the internet as postcard image.
-    Note: image content may be inappropriate
+    Note: image may be inappropriate
 
     Use flag --keyword <keyword> to search for specific images
     """
