@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from postcards import Postcards
+from postcards.postcards import Postcards
 import urllib
-from util.random_search_term.random_search_term import get_random_search_term
+from .random_search_term.random_search_term import get_random_search_term
 from bs4 import BeautifulSoup
 import json
 import urllib.request, urllib.error, urllib.parse
@@ -107,5 +107,9 @@ class PostcardsRandom(Postcards):
         return imgs
 
 
-if __name__ == '__main__':
+def main():
     PostcardsRandom().main(sys.argv[1:])
+
+
+if __name__ == '__main__':
+    main()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from postcards import Postcards
+from postcards.postcards import Postcards
 import sys
 import os
 import random
@@ -70,5 +70,9 @@ class PostcardsFolder(Postcards):
             return path
 
 
-if __name__ == '__main__':
+def main():
     PostcardsFolder().main(sys.argv[1:])
+
+
+if __name__ == '__main__':
+    main()

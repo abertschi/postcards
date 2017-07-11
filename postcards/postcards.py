@@ -14,10 +14,6 @@ import inflection
 import random
 import pkg_resources
 
-if sys.version_info < (3, 0):
-    sys.stderr.write("Sorry, requires >= Python 3.x, not Python 2.x\n")
-    sys.exit(1)
-
 LOGGING_TRACE_LVL = 5
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                     format='%(name)s (%(levelname)s): %(message)s')
@@ -137,7 +133,7 @@ class Postcards:
             self.logger.error('config file already exist in current directory.')
             exit(1)
 
-        content = pkg_resources.resource_string(__name__, 'template_config.json').decode('utf-8')
+        content = pkg_resources.resource_string(__name__, 'static/template_config.json').decode('utf-8')
         file = open(target_location, 'w')
         file.write(content)
         file.close()
@@ -227,7 +223,7 @@ class Postcards:
         self.logger.info('reading config file ' + location)
 
         if not os.path.isfile(location):
-            self.logger.fatal('config file not found at ' + location)
+            self.logger.fatal('config file not found at ' + location + ' . set config file with --config flag')
             exit(1)
         try:
             with open(location) as f:
@@ -379,6 +375,10 @@ class Postcards:
         return parser.parse_args()
 
 
-if __name__ == '__main__':
+def main():
     p = Postcards()
     p.main(sys.argv)
+
+
+if __name__ == '__main__':
+    main()
