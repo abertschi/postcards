@@ -12,6 +12,7 @@ from argparse import RawTextHelpFormatter
 import urllib
 import inflection
 import random
+import pkg_resources
 
 if sys.version_info < (3, 0):
     sys.stderr.write("Sorry, requires >= Python 3.x, not Python 2.x\n")
@@ -44,6 +45,9 @@ class Postcards:
             exit(0)
         elif args.decrypt:
             self.decrypt_credential(key_settings['key'], args.decrypt[0])
+            exit(0)
+        elif args.generate:
+            self._generate_config_file()
             exit(0)
 
         config = self._read_config(args.config[0])
@@ -122,6 +126,18 @@ class Postcards:
         self.logger.info('decrypted credential:')
         self.logger.info(self._decrypt(key, credential))
 
+    def _generate_config_file(self):
+        target_location = str(os.path.join(os.getcwd(), 'config.json'))
+        if os.path.isfile(target_location):
+            self.logger.error('config file already exist in current directory.')
+            exit(1)
+
+        content = pkg_resources.resource_string(__name__, 'template_config.json').decode('utf-8')
+        file = open(target_location, 'w')
+        file.write(content)
+        file.close()
+        self.logger.info('empty config file generated at {}'.format(target_location))
+
     def _create_recipient(self, recipient):
         return postcard_creator.Recipient(prename=recipient.get('firstname'),
                                           lastname=recipient.get('lastname'),
@@ -153,12 +169,12 @@ class Postcards:
         return accounts
 
     def _validate_cli_args(self, args):
-        if not any([args.config, args.encrypt, args.decrypt]):
-            self.logger.error('the following arguments are required: --config, --encrypt, or --decrypt')
+        if not any([args.config, args.encrypt, args.decrypt, args.generate]):
+            self.logger.error('the following arguments are required: --config, --encrypt, --decrypt, --generate')
             exit(1)
 
         if not self._is_plugin():
-            if not args.picture and not any([args.encrypt, args.decrypt]):
+            if not args.picture and not any([args.encrypt, args.decrypt, args.generate]):
                 self.logger.error('picture not set with --picture')
                 exit(1)
 
@@ -319,6 +335,9 @@ class Postcards:
                             help='location to the json config file (default: ./config.json)', default=['config.json'])
         # parser.add_argument('--accounts-file', default=False,
         #                     help='location to a dedicated json file containing postcard creator accounts')
+
+        parser.add_argument('--generate', required=False, action='store_true',
+                            help='generate an empty config file')
 
         parser.add_argument('--picture', default=False,
                             help='postcard picture. path to an URL or image on disk')

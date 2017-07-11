@@ -1,0 +1,22 @@
+{
+  "recipient": {
+    "firstname": "",
+    "lastname": "",
+    "street": "",
+    "zipcode": "",
+    "city": ""
+  },
+  "sender": {
+    "firstname": "",
+    "lastname": "",
+    "street": "",
+    "zipcode": "",
+    "city": ""
+  },
+  "accounts": [
+    {
+      "username": "",
+      "password": ""
+    }
+  ]
+}
