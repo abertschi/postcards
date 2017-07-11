@@ -7,6 +7,10 @@ import sys
 
 
 class PostcardsPexel(Postcards):
+    """
+    Send postcards with random images from pexels.com
+    """
+    
     def get_img_and_text(self, plugin_config, cli_args):
         url = get_random_image_url()
         self.logger.info('using pexels picture: ' + url)

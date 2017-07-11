@@ -9,6 +9,10 @@ import ntpath
 
 
 class PostcardsFolder(Postcards):
+    """
+    Send postcards with images from a local folder
+    """
+
     supported_ext = ['.jpg', '.jpeg', '.png']
 
     def get_img_and_text(self, payload, cli_args):
