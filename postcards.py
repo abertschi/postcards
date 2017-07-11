@@ -67,8 +67,13 @@ class Postcards:
 
     def send(self, accounts, recipient, sender, mock=False, plugin_payload={},
              message=None, picture_stream=None, cli_args=None):
-        self.logger.info('checking for valid accounts')
 
+        if cli_args and cli_args.test_plugin:
+            self.logger.info('running plugin only (--test-plugin)')
+            self.get_img_and_text(plugin_payload, cli_args=cli_args)
+            exit(0)
+
+        self.logger.info('checking for valid accounts')
         pcc_wrapper = None
         try_again_after = ''
         for account in accounts:
@@ -361,6 +366,9 @@ class Postcards:
 
         parser.add_argument('--mock', action='store_true',
                             help='do not submit postcard. useful for testing')
+
+        parser.add_argument('--test-plugin', action='store_true',
+                            help='run plugin without config validation. useful for testing')
 
         parser.add_argument("-v", "--verbose", dest="verbose_count",
                             action="count", default=0,
