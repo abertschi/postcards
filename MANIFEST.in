@@ -1,1 +1,1 @@
-include README.md postcards/template_config.json requirements.txt
+include README.md postcards/template_config.json requirements.txt postcards/plugin_pexels/util/words.txt
