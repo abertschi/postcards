@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 from postcards.postcards import Postcards
-from .util.pexels import get_random_image_url, read_from_url
+from postcards.plugin_pexels.util.pexels import get_random_image_url, read_from_url
 import sys
 
 
