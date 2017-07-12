@@ -46,9 +46,15 @@ class Postcards:
             self._generate_config_file()
             exit(0)
 
-        config = self._read_config(args.config[0])
-        accounts = self._get_accounts(config=config, key=key_settings['key'] if key_settings['uses_key'] else None,
-                                      username=args.username, password=args.password)
+        config = self._read_json_file(args.config[0], 'config')
+
+        if args.accounts_file:
+            accounts_file = self._read_json_file(args.accounts_file, 'accounts')
+
+        accounts = self._get_accounts(config=accounts_file if args.accounts_file else config,
+                                      key=key_settings['key'] if key_settings['uses_key'] else None,
+                                      username=args.username,
+                                      password=args.password)
         random.shuffle(accounts)
         self._validate_config(config, accounts)
 
@@ -218,18 +224,18 @@ class Postcards:
                 self.logger.error('sender is invalid. required fields are ' + str(required))
                 exit(1)
 
-    def _read_config(self, location):
+    def _read_json_file(self, location, name):
         location = self._make_absolute_path(location)
-        self.logger.info('reading config file ' + location)
+        self.logger.info('reading {} file at {}'.format(name, location))
 
         if not os.path.isfile(location):
-            self.logger.fatal('config file not found at ' + location + ' . set config file with --config flag')
+            self.logger.fatal('{} file not found at {}'.format(name, location))
             exit(1)
         try:
             with open(location) as f:
                 return json.load(f)
         except Exception as e:
-            self.logger.error('can not parse config file ' + location + '. is it valid json ?')
+            self.logger.error('can not parse {} file {} . is it valid json ?'.format(name, location))
             exit(1)
 
     def _read_picture(self, location):
@@ -334,8 +340,9 @@ class Postcards:
                                          description='Postcards is a CLI for the Swiss Postcard Creator')
         parser.add_argument('--config', nargs=1, required=False, type=str,
                             help='location to the json config file (default: ./config.json)', default=['config.json'])
-        # parser.add_argument('--accounts-file', default=False,
-        #                     help='location to a dedicated json file containing postcard creator accounts')
+
+        parser.add_argument('--accounts-file', default=False,
+                            help='location to a dedicated json file containing postcard creator accounts')
 
         parser.add_argument('--generate', required=False, action='store_true',
                             help='generate an empty config file')
