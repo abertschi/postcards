@@ -338,14 +338,21 @@ class Postcards:
     def get_argparser(self, argv):
         parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter,
                                          description='Postcards is a CLI for the Swiss Postcard Creator')
+
+        parser.add_argument('--generate', required=False, action='store_true',
+                            help='generate an empty config file')
+
+        parser.add_argument('--encrypt', action="store", nargs=1, metavar="CREDENTIAL", default=False,
+                            help='encrypt credentials with default key. \n' +
+                                 'use --key argument to use custom key.')
+        parser.add_argument('--decrypt', action="store", nargs=1, metavar="ENCRYPTED_TEXT", default=False,
+                            help='decrypt credentials with default key. use --key argument to use custom key.')
+
         parser.add_argument('--config', nargs=1, required=False, type=str,
                             help='location to the json config file (default: ./config.json)', default=['config.json'])
 
         parser.add_argument('--accounts-file', default=False,
                             help='location to a dedicated json file containing postcard creator accounts')
-
-        parser.add_argument('--generate', required=False, action='store_true',
-                            help='generate an empty config file')
 
         parser.add_argument('--picture', default=False,
                             help='postcard picture. path to an URL or image on disk')
@@ -354,6 +361,7 @@ class Postcards:
 
         parser.add_argument('--username', default=None, type=str,
                             help='username credential. otherwise set in config or accounts file')
+
         parser.add_argument('--password', default=None, type=str,
                             help='password credential. otherwise set in config or accounts file')
 
@@ -361,11 +369,6 @@ class Postcards:
                             help='use this argument if your credentials are stored encrypted in config file. \n'
                                  + 'set your custom key if you are not using default key. \n'
                                  + '(i.e. --key PASSWORD instead of --key)')
-        parser.add_argument('--encrypt', action="store", nargs=1, metavar="CREDENTIAL", default=False,
-                            help='encrypt credentials with default key. \n' +
-                                 'use --key argument to use custom key.')
-        parser.add_argument('--decrypt', action="store", nargs=1, metavar="ENCRYPTED_TEXT", default=False,
-                            help='decrypt credentials with default key. use --key argument to use custom key.')
 
         parser.add_argument('--mock', action='store_true',
                             help='do not submit postcard. useful for testing')
