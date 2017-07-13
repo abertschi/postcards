@@ -5,7 +5,7 @@ import math
 import sys
 import logging
 
-"""slice_image.py: Slice images into tiles."""
+"""slice_image.py: Slice image into tiles."""
 
 __author__ = "Andrin Bertschi. www.abertschi.ch"
 
