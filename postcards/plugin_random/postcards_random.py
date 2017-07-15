@@ -28,12 +28,13 @@ class PostcardsRandom(Postcards):
     Use flag --keyword <keyword> to search for specific images
     """
 
-    def enrich_parser(self, parser):
+    def build_and_get_subparser_send(self, subparsers):
+        parser = Postcards.build_and_get_subparser_send(self, subparsers)
         parser.add_argument('--keyword', default=None, type=str,
                             help='use custom keyword to search for images')
         parser.add_argument('--safe-search', default=False, action='store_true',
                             help='enable safe search')
-        pass
+        return parser
 
     def get_img_and_text(self, plugin_config, cli_args):
         imgs = []
