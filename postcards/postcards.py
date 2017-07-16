@@ -69,12 +69,10 @@ class Postcards:
         self.logger.info('empty config file generated at {}'.format(target_location))
 
     def do_command_encrypt(self, args):
-        key_settings = self._parse_key(args)
-        self.encrypt_credential(key_settings['key'], args.encrypt[0])
+        self.encrypt_credential(args.key, args.credential)
 
     def do_command_decrypt(self, args):
-        key_settings = self._parse_key(args)
-        self.decrypt_credential(key_settings['key'], args.decrypt[0])
+        self.decrypt_credential(args.key, args.credential)
 
     def do_command_send(self, args):
         config = self._read_json_file(args.config_file[0], 'config')
@@ -337,18 +335,25 @@ class Postcards:
 
     def _build_subparser_decrypt(self, subparsers):
         parser_decrypt = subparsers.add_parser('decrypt', help='decrypt credentials')
-        parser_decrypt.add_argument('-k', '--key', help='set a custom key to encrypt credentials',
-                                    nargs='?',
+        parser_decrypt.add_argument('credential', help='credential to decrypt', action='store')
+        parser_decrypt.add_argument('-k', '--key', help='set a custom key to decrypt credential',
+                                    default=self.default_key,
                                     action='store',
                                     dest='key')
+
         self.enhance_decrypt_subparser(parser_decrypt)
 
     def _build_subparser_encrypt(self, subparsers):
         parser_encrypt = subparsers.add_parser('encrypt', help='encrypt credentials to store in configuration file')
+
+        parser_encrypt.add_argument('credential', help='credential to encrypt',
+                                    action='store')
+
         parser_encrypt.add_argument('-k', '--key', help='set a custom key to encrypt credentials',
-                                    nargs='?',
                                     action='store',
+                                    default=self.default_key,
                                     dest='key')
+
         self.enhance_encrypt_subparser(parser_encrypt)
 
     def _build_subparser_generate(self, subparsers):
