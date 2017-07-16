@@ -31,12 +31,12 @@ class Postcards:
             pass
 
     def main(self, argv):
-        parser = self.build_and_get_root_parser(argv)
+        parser = self._build_root_parser(argv)
         subparsers = parser.add_subparsers(help='', dest='mode')
-        self.build_and_get_subparser_generate(subparsers)
-        self.build_and_get_subparser_send(subparsers)
-        self.build_and_get_subparser_encrypt(subparsers)
-        self.build_and_get_subparser_decrypt(subparsers)
+        self._build_subparser_generate(subparsers)
+        self._build_subparser_send(subparsers)
+        self._build_subparser_encrypt(subparsers)
+        self._build_subparser_decrypt(subparsers)
 
         args = parser.parse_args()
         self._configure_logging(self.logger, args.verbose_count)
@@ -49,9 +49,11 @@ class Postcards:
             self.do_command_encrypt(args)
         elif args.mode == 'decrypt':
             self.do_command_decrypt(args)
+        elif self.can_handle_command(args.mode):
+            self.handle_command(args.mode, args)
         else:
             parser.print_usage()
-    
+
     def do_command_generate(self, args):
         target_location = str(os.path.join(os.getcwd(), 'config.json'))
 
@@ -322,28 +324,7 @@ class Postcards:
         if logger.level <= LOGGING_TRACE_LVL:
             api_wrapper_logger.setLevel(5)
 
-    def get_img_and_text(self, plugin_payload, cli_args):
-        """
-        To be overwritten by a plugin
-        :param plugin_payload: plugin config from config file
-        :param parser args added in Postcards.encrich_parser(). See docs of argparse
-        :return: an image and text
-        """
-        raise Exception('Dont run this class directly. Use a plugin instead')
-        return {'img': None, 'text': None}  # structure of object to return
-
-    def enrich_parser(self, parser):
-        """
-        A plugin can add CLI options to the parser
-        :param parser:
-        :return: nothing
-        """
-        pass
-
-    def get_logger(self):
-        return self.logger
-
-    def build_and_get_root_parser(self, argv):
+    def _build_root_parser(self, argv):
         parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter,
                                          description='Postcards is a CLI for the Swiss Postcard Creator')
         parser.epilog = 'sourcecode: https://github.com/abertschi/postcards'
@@ -351,30 +332,31 @@ class Postcards:
         parser.add_argument("-v", "--verbose", dest="verbose_count",
                             action="count", default=0,
                             help="increases log verbosity for each occurrence.")
+        self.enhance_root_subparser(parser)
         return parser
 
-    def build_and_get_subparser_decrypt(self, subparsers):
+    def _build_subparser_decrypt(self, subparsers):
         parser_decrypt = subparsers.add_parser('decrypt', help='decrypt credentials')
         parser_decrypt.add_argument('-k', '--key', help='set a custom key to encrypt credentials',
                                     nargs='?',
                                     action='store',
                                     dest='key')
-        return parser_decrypt
+        self.enhance_decrypt_subparser(parser_decrypt)
 
-    def build_and_get_subparser_encrypt(self, subparsers):
+    def _build_subparser_encrypt(self, subparsers):
         parser_encrypt = subparsers.add_parser('encrypt', help='encrypt credentials to store in configuration file')
         parser_encrypt.add_argument('-k', '--key', help='set a custom key to encrypt credentials',
                                     nargs='?',
                                     action='store',
                                     dest='key')
-        return parser_encrypt
+        self.enhance_encrypt_subparser(parser_encrypt)
 
-    def build_and_get_subparser_generate(self, subparsers):
+    def _build_subparser_generate(self, subparsers):
         parser_generate = subparsers.add_parser('generate', help='generate an empty configuration file',
                                                 description='generate an empty configuration file')
-        return parser_generate
+        self.enhance_generate_subparser(parser_generate)
 
-    def build_and_get_subparser_send(self, subparsers):
+    def _build_subparser_send(self, subparsers):
         parser_send = subparsers.add_parser('send', help='send postcards',
                                             description='send postcards')
         parser_send.add_argument('-c', '--config',
@@ -430,7 +412,37 @@ class Postcards:
                                       + 'set your custom key if you are not using default key. \n'
                                       + '(i.e. --key PASSWORD instead of --key)',
                                  dest='key')
-        return parser_send
+        self.enhance_send_subparser(parser_send)
+
+    def get_img_and_text(self, plugin_payload, cli_args):
+        """
+        To be overwritten by a plugin
+        :param plugin_payload: plugin config from config file
+        :param parser args added in Postcards.encrich_parser(). See docs of argparse
+        :return: an image and text
+        """
+        return {'img': None, 'text': None}  # structure of object to return
+
+    def enhance_root_subparser(self, parser):
+        pass
+
+    def enhance_generate_subparser(self, parser):
+        pass
+
+    def enhance_send_subparser(self, parser):
+        pass
+
+    def enhance_encrypt_subparser(self, parser):
+        pass
+
+    def enhance_decrypt_subparser(self, parser):
+        pass
+
+    def can_handle_command(self, command):
+        return False
+
+    def handle_command(self, command, args):
+        pass
 
 
 def main():

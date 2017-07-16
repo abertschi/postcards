@@ -74,18 +74,7 @@ def _make_absolute_path(path):
         return str(os.path.join(os.getcwd(), path))
 
 
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO,
-                        format='%(name)s (%(levelname)s): %(message)s')
-    logging.getLogger(LOGGER_NAME).setLevel(logging.DEBUG)
-
-    if len(sys.argv) < 4:
-        logger.error('wrong usage. call script python {} <image_path> <tile_width> <tile_height>'.format(sys.argv[0]))
-        exit(1)
-
-    image_path = _make_absolute_path(sys.argv[1])
-    tile_height = int(sys.argv[3])
-    tile_width = int(sys.argv[2])
+def _from_cli(image_location, title_width, tile_height):
     if not os.path.isfile(image_path):
         logger.error('file {} does not exist'.format(image_path))
         exit(1)
@@ -98,3 +87,18 @@ if __name__ == '__main__':
 
         tiles = make_tiles(image, tile_width=tile_width, tile_height=tile_height)
         store_tiles(tiles, directory)
+
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO,
+                        format='%(name)s (%(levelname)s): %(message)s')
+    logging.getLogger(LOGGER_NAME).setLevel(logging.DEBUG)
+
+    if len(sys.argv) < 4:
+        logger.error('wrong usage. call script python {} <image_path> <tile_width> <tile_height>'.format(sys.argv[0]))
+        exit(1)
+
+    image_path = _make_absolute_path(sys.argv[1])
+    tile_height = int(sys.argv[3])
+    tile_width = int(sys.argv[2])
+    _from_cli(image_path, tile_width, tile_height)
