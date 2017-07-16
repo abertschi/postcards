@@ -37,7 +37,7 @@ sourcecode and documentation: https://github.com/abertschi/postcards
 ```
 
 ## Getting started
-Create a a configuration file by issuing 
+Create a configuration file by issuing 
 ```bash
 $ postcards generate
 ```
@@ -75,7 +75,7 @@ Example:
 postcards_folder send --config ./config.json --message "This overwrites the message set by the plugin"
 ```
 
-### postcards-folder
+### Plugin: postcards-folder
 Send pictures from a folder.  
 
 Add the following object to your configuration file
@@ -96,7 +96,7 @@ Add the following object to your configuration file
 postcards-folder send --config ./my-config.json
 ```
 
-### postcards-pexels  
+### Plugin: postcards-pexels  
 Send postcards with random pictures from www.pexels.com.
 
 No configuration is necessary in your `config.json` file
