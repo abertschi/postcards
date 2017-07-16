@@ -114,20 +114,21 @@ class Postcards:
                 pcc = postcard_creator.PostcardCreator(token)
                 if pcc.has_free_postcard():
                     pcc_wrapper = pcc
-                    self.logger.info(f'account {account.get("username")} is valid')
+                    self.logger.info('account {} is valid'.format(account.get("username")))
                     break
                 else:
                     next_quota = pcc.get_quota().get('next')
                     if next_quota < try_again_after or try_again_after is '':
                         try_again_after = next_quota
 
-                    self.logger.debug(f'account {account.get("username")} is invalid. ' +
-                                      f'new quota available after {next_quota}.')
+                    self.logger.debug('account {} is invalid. '.format(account.get("username")) +
+                                      'new quota available after {}.'.format(next_quota))
             else:
-                self.logger.warning(f'wrong user credentials for {account.get("username")}')
+                self.logger.warning('wrong user credentials '
+                                    'for {}'.format(account.get("username")))
 
         if not pcc_wrapper:
-            self.logger.error(f'no valid account given. try again after {try_again_after}')
+            self.logger.error('no valid account given. try again after {}'.format(try_again_after))
             exit(1)
 
         if self._is_plugin():

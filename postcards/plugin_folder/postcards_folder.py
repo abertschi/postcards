@@ -36,7 +36,7 @@ class PostcardsFolder(Postcards):
         img_path = os.path.join(folder, img_name)
         move_info = 'moving to sent folder' if payload.get('move') else 'no move'
 
-        self.logger.info(f'choosing image {img_path} ({move_info})')
+        self.logger.info('choosing image {} ({})'.format(img_path, move_info))
         file = open(img_path, 'rb')
 
         if payload.get('move'):
@@ -51,12 +51,12 @@ class PostcardsFolder(Postcards):
         sent_folder = os.path.join(picture_folder, 'sent')
         if not os.path.exists(sent_folder):
             os.makedirs(sent_folder)
-            self.logger.debug(f'creating folder {sent_folder}')
+            self.logger.debug('creating folder {}'.format(sent_folder))
 
         img_name = self._get_filename(image_path)
         sent_img_path = os.path.join(sent_folder, img_name)
         os.rename(image_path, sent_img_path)
-        self.logger.debug(f'moving image from {image_path} to {sent_img_path}')
+        self.logger.debug('moving image from {} to {}'.format(image_path, sent_img_path))
 
     def _get_filename(self, path):
         head, tail = ntpath.split(path)
