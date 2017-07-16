@@ -1,5 +1,4 @@
 # Postcards
-> A CLI for the Swiss Postcard Creator
 
 Postcards is a set of python scripts that allow you to send postcards with the Swiss Postcard Creator.
 
@@ -39,21 +38,22 @@ sourcecode and documentation: https://github.com/abertschi/postcards
 
 ## Getting started
 Create a a configuration file by issuing 
-```sh
+```bash
 $ postcards generate
 ```
 A configuration file holds various information relevant to send postcards.
  
 ### Examples
-```
-```sh
+Issue `postcards send --help` for more information about the available flags to set.
+
+```bash
 # Send a postcard
 $ postcards send --config config.json \
     --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
     --message "Happy coding"
 
 
-# Encrypt user credentials to store in config.json
+# Encrypt user credentials to store in configuration file
 $ postcards encrypt mypassword
 
 
@@ -68,14 +68,13 @@ $ postcards send --config config.json \
 ## Plugins
 Postcards is designed in a plugin based approach.
 
-
-
 Note: Your picture (`--picture`) or the message text (`--message`) can always be overwritten by command line arguments if you use a plugin.
 
 Example: 
 ```
 postcards_folder send --config ./config.json --message "This overwrites the message set by the plugin"
 ```
+
 ### postcards-folder
 Send pictures from a folder.  
 
