@@ -31,26 +31,56 @@ class Postcards:
             pass
 
     def main(self, argv):
-        args = self.get_argparser(argv)
+        parser = self._build_root_parser(argv)
+        subparsers = parser.add_subparsers(help='', dest='mode')
+        self._build_subparser_generate(subparsers)
+        self._build_subparser_send(subparsers)
+        self._build_subparser_encrypt(subparsers)
+        self._build_subparser_decrypt(subparsers)
+
+        args = parser.parse_args()
         self._configure_logging(self.logger, args.verbose_count)
-        self._validate_cli_args(args=args)
 
-        key_settings = self._parse_key(args)
-        if args.encrypt:
-            self.encrypt_credential(key_settings['key'], args.encrypt[0])
-            exit(0)
-        elif args.decrypt:
-            self.decrypt_credential(key_settings['key'], args.decrypt[0])
-            exit(0)
-        elif args.generate:
-            self._generate_config_file()
-            exit(0)
+        if args.mode == 'generate':
+            self.do_command_generate(args)
+        elif args.mode == 'send':
+            self.do_command_send(args)
+        elif args.mode == 'encrypt':
+            self.do_command_encrypt(args)
+        elif args.mode == 'decrypt':
+            self.do_command_decrypt(args)
+        elif self.can_handle_command(args.mode):
+            self.handle_command(args.mode, args)
+        else:
+            parser.print_usage()
 
-        config = self._read_json_file(args.config[0], 'config')
+    def do_command_generate(self, args):
+        target_location = str(os.path.join(os.getcwd(), 'config.json'))
+
+        if os.path.isfile(target_location):
+            self.logger.error('config file already exist in current directory.')
+            exit(1)
+
+        content = pkg_resources.resource_string(__name__, 'static/template_config.json').decode('utf-8')
+        file = open(target_location, 'w')
+        file.write(content)
+        file.close()
+
+        self.logger.info('empty config file generated at {}'.format(target_location))
+
+    def do_command_encrypt(self, args):
+        self.encrypt_credential(args.key, args.credential)
+
+    def do_command_decrypt(self, args):
+        self.decrypt_credential(args.key, args.credential)
+
+    def do_command_send(self, args):
+        config = self._read_json_file(args.config_file[0], 'config')
 
         if args.accounts_file:
             accounts_file = self._read_json_file(args.accounts_file, 'accounts')
 
+        key_settings = self._parse_key(args)
         accounts = self._get_accounts(config=accounts_file if args.accounts_file else config,
                                       key=key_settings['key'] if key_settings['uses_key'] else None,
                                       username=args.username,
@@ -84,20 +114,21 @@ class Postcards:
                 pcc = postcard_creator.PostcardCreator(token)
                 if pcc.has_free_postcard():
                     pcc_wrapper = pcc
-                    self.logger.info(f'account {account.get("username")} is valid')
+                    self.logger.info('account {} is valid'.format(account.get("username")))
                     break
                 else:
                     next_quota = pcc.get_quota().get('next')
                     if next_quota < try_again_after or try_again_after is '':
                         try_again_after = next_quota
 
-                    self.logger.debug(f'account {account.get("username")} is invalid. ' +
-                                      f'new quota available after {next_quota}.')
+                    self.logger.debug('account {} is invalid. '.format(account.get("username")) +
+                                      'new quota available after {}.'.format(next_quota))
             else:
-                self.logger.warning(f'wrong user credentials for {account.get("username")}')
+                self.logger.warning('wrong user credentials '
+                                    'for {}'.format(account.get("username")))
 
         if not pcc_wrapper:
-            self.logger.error(f'no valid account given. try again after {try_again_after}')
+            self.logger.error('no valid account given. try again after {}'.format(try_again_after))
             exit(1)
 
         if self._is_plugin():
@@ -133,18 +164,6 @@ class Postcards:
         self.logger.info('decrypted credential:')
         self.logger.info(self._decrypt(key, credential))
 
-    def _generate_config_file(self):
-        target_location = str(os.path.join(os.getcwd(), 'config.json'))
-        if os.path.isfile(target_location):
-            self.logger.error('config file already exist in current directory.')
-            exit(1)
-
-        content = pkg_resources.resource_string(__name__, 'static/template_config.json').decode('utf-8')
-        file = open(target_location, 'w')
-        file.write(content)
-        file.close()
-        self.logger.info('empty config file generated at {}'.format(target_location))
-
     def _create_recipient(self, recipient):
         return postcard_creator.Recipient(prename=recipient.get('firstname'),
                                           lastname=recipient.get('lastname'),
@@ -174,16 +193,6 @@ class Postcards:
                     'password': account.get('password') if not key else self._decrypt(key, account.get('password'))
                 })
         return accounts
-
-    def _validate_cli_args(self, args):
-        if not any([args.config, args.encrypt, args.decrypt, args.generate]):
-            self.logger.error('the following arguments are required: --config, --encrypt, --decrypt, --generate')
-            exit(1)
-
-        if not self._is_plugin():
-            if not args.picture and not any([args.encrypt, args.decrypt, args.generate]):
-                self.logger.error('picture not set with --picture')
-                exit(1)
 
     def _parse_key(self, args):
         key = self.default_key
@@ -314,6 +323,103 @@ class Postcards:
         if logger.level <= LOGGING_TRACE_LVL:
             api_wrapper_logger.setLevel(5)
 
+    def _build_root_parser(self, argv):
+        parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter,
+                                         description='Postcards is a CLI for the Swiss Postcard Creator')
+        parser.epilog = 'sourcecode: https://github.com/abertschi/postcards'
+
+        parser.add_argument("-v", "--verbose", dest="verbose_count",
+                            action="count", default=0,
+                            help="increases log verbosity for each occurrence.")
+        self.enhance_root_subparser(parser)
+        return parser
+
+    def _build_subparser_decrypt(self, subparsers):
+        parser_decrypt = subparsers.add_parser('decrypt', help='decrypt credentials')
+        parser_decrypt.add_argument('credential', help='credential to decrypt', action='store')
+        parser_decrypt.add_argument('-k', '--key', help='set a custom key to decrypt credential',
+                                    default=self.default_key,
+                                    action='store',
+                                    dest='key')
+
+        self.enhance_decrypt_subparser(parser_decrypt)
+
+    def _build_subparser_encrypt(self, subparsers):
+        parser_encrypt = subparsers.add_parser('encrypt', help='encrypt credentials to store in configuration file')
+
+        parser_encrypt.add_argument('credential', help='credential to encrypt',
+                                    action='store')
+
+        parser_encrypt.add_argument('-k', '--key', help='set a custom key to encrypt credentials',
+                                    action='store',
+                                    default=self.default_key,
+                                    dest='key')
+
+        self.enhance_encrypt_subparser(parser_encrypt)
+
+    def _build_subparser_generate(self, subparsers):
+        parser_generate = subparsers.add_parser('generate', help='generate an empty configuration file',
+                                                description='generate an empty configuration file')
+        self.enhance_generate_subparser(parser_generate)
+
+    def _build_subparser_send(self, subparsers):
+        parser_send = subparsers.add_parser('send', help='send postcards',
+                                            description='send postcards')
+        parser_send.add_argument('-c', '--config',
+                                 nargs=1,
+                                 required=True,
+                                 type=str,
+                                 help='location to the configuration file (default: ./config.json)',
+                                 default=[os.path.join(os.getcwd(), 'config.json')],
+                                 dest='config_file')
+
+        parser_send.add_argument('-a', '--accounts-file',
+                                 default=False,
+                                 help='location to a dedicated file containing postcard creator accounts',
+                                 dest='accounts_file')
+
+        parser_send.add_argument('-p', '--picture',
+                                 required=not self._is_plugin(),
+                                 help='postcard picture. path to an URL or image on disk',
+                                 dest='picture')
+
+        parser_send.add_argument('-m', '--message',
+                                 default='',
+                                 help='postcard message',
+                                 dest='message')
+
+        parser_send.add_argument('--mock',
+                                 action='store_true',
+                                 help='do not submit postcard. useful for testing',
+                                 dest='mock')
+
+        parser_send.add_argument('--test-plugin',
+                                 action='store_true',
+                                 help='run plugin without configuration validation. useful for testing',
+                                 dest='test_plugin')
+
+        parser_send.add_argument('--username',
+                                 default='',
+                                 type=str,
+                                 help='username credential. otherwise set in config or accounts file',
+                                 dest='username')
+
+        parser_send.add_argument('--password',
+                                 default='',
+                                 type=str,
+                                 help='password credential. otherwise set in config or accounts file',
+                                 dest='password')
+
+        parser_send.add_argument('-k', '--key',
+                                 nargs='?',
+                                 metavar="KEY",
+                                 default=(None,),
+                                 help='use this argument if your credentials are stored encrypted in configuration file. \n'
+                                      + 'set your custom key if you are not using default key. \n'
+                                      + '(i.e. --key PASSWORD instead of --key)',
+                                 dest='key')
+        self.enhance_send_subparser(parser_send)
+
     def get_img_and_text(self, plugin_payload, cli_args):
         """
         To be overwritten by a plugin
@@ -321,68 +427,28 @@ class Postcards:
         :param parser args added in Postcards.encrich_parser(). See docs of argparse
         :return: an image and text
         """
-        raise Exception('Dont run this class directly. Use a plugin instead')
         return {'img': None, 'text': None}  # structure of object to return
 
-    def enrich_parser(self, parser):
-        """
-        A plugin can add CLI options to the parser
-        :param parser:
-        :return: nothing
-        """
+    def enhance_root_subparser(self, parser):
         pass
 
-    def get_logger(self):
-        return self.logger
+    def enhance_generate_subparser(self, parser):
+        pass
 
-    def get_argparser(self, argv):
-        parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter,
-                                         description='Postcards is a CLI for the Swiss Postcard Creator')
+    def enhance_send_subparser(self, parser):
+        pass
 
-        parser.add_argument('--generate', required=False, action='store_true',
-                            help='generate an empty config file')
+    def enhance_encrypt_subparser(self, parser):
+        pass
 
-        parser.add_argument('--encrypt', action="store", nargs=1, metavar="CREDENTIAL", default=False,
-                            help='encrypt credentials with default key. \n' +
-                                 'use --key argument to use custom key.')
-        parser.add_argument('--decrypt', action="store", nargs=1, metavar="ENCRYPTED_TEXT", default=False,
-                            help='decrypt credentials with default key. use --key argument to use custom key.')
+    def enhance_decrypt_subparser(self, parser):
+        pass
 
-        parser.add_argument('--config', nargs=1, required=False, type=str,
-                            help='location to the json config file (default: ./config.json)', default=['config.json'])
+    def can_handle_command(self, command):
+        return False
 
-        parser.add_argument('--accounts-file', default=False,
-                            help='location to a dedicated json file containing postcard creator accounts')
-
-        parser.add_argument('--picture', default=False,
-                            help='postcard picture. path to an URL or image on disk')
-        parser.add_argument('--message', default='',
-                            help='postcard message')
-
-        parser.add_argument('--username', default=None, type=str,
-                            help='username credential. otherwise set in config or accounts file')
-
-        parser.add_argument('--password', default=None, type=str,
-                            help='password credential. otherwise set in config or accounts file')
-
-        parser.add_argument('--key', nargs='?', metavar="KEY", default=(None,),
-                            help='use this argument if your credentials are stored encrypted in config file. \n'
-                                 + 'set your custom key if you are not using default key. \n'
-                                 + '(i.e. --key PASSWORD instead of --key)')
-
-        parser.add_argument('--mock', action='store_true',
-                            help='do not submit postcard. useful for testing')
-
-        parser.add_argument('--test-plugin', action='store_true',
-                            help='run plugin without config validation. useful for testing')
-
-        parser.add_argument("-v", "--verbose", dest="verbose_count",
-                            action="count", default=0,
-                            help="increases log verbosity for each occurrence.")
-
-        parser.epilog = 'sourcecode: https://github.com/abertschi/postcards'
-        self.enrich_parser(parser)
-        return parser.parse_args()
+    def handle_command(self, command, args):
+        pass
 
 
 def main():

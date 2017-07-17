@@ -26,14 +26,14 @@ class PostcardsRandom(Postcards):
     Note: image may be inappropriate
 
     Use flag --keyword <keyword> to search for specific images
+    Use flag --safe-search to enable safe search
     """
 
-    def enrich_parser(self, parser):
+    def enhance_send_subparser(self, parser):
         parser.add_argument('--keyword', default=None, type=str,
                             help='use custom keyword to search for images')
         parser.add_argument('--safe-search', default=False, action='store_true',
                             help='enable safe search')
-        pass
 
     def get_img_and_text(self, plugin_config, cli_args):
         imgs = []
