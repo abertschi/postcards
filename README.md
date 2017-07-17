@@ -41,10 +41,11 @@ Create a configuration file by issuing
 ```bash
 $ postcards generate
 ```
-A configuration file holds various information relevant to send postcards.
+A [configuration file](./postcards/template_config.json) 
+holds various information relevant to send postcards.
  
 ### Examples
-Issue `postcards send --help` for more information about the available flags to set.
+Issue `postcards send --help` for more information about sending postcards.
 
 ```bash
 # Send a postcard
@@ -53,27 +54,28 @@ $ postcards send --config config.json \
     --message "Happy coding"
 
 
-# Encrypt user credentials to store in configuration file
+# Encrypt user passwords to store in configuration file
 $ postcards encrypt mypassword
 
 
-# Send a postcard with encrypted credentials
+# Send a postcard with encrypted passwords stored in configuration file
 $ postcards send --config config.json \
     --key \
     --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
     --message "Happy coding"
 ```
 
-
 ## Plugins
-Postcards is designed in a plugin based approach.
+Postcards is designed in a plugin based approach. 
+Plugins set the text and / or picture of your postcards.
 
-Note: Your picture (`--picture`) or the message text (`--message`) can always be overwritten by command line arguments if you use a plugin.
+Postcard pictures and text can always be overwritten by commandline by issuing 
+`--picture <picutre>` and `--message <message>`.
 
-Example: 
-```
-postcards_folder send --config ./config.json --message "This overwrites the message set by the plugin"
-```
+These plugins are available:
+- [Plugin: postcards-folder](#Plugin:-postcards-folder)
+- [Plugin: postcards-pexels](#Plugin:-postcards-pexels)
+- [Build your own plugin](#Build-your-own-plugin)
 
 ### Plugin: postcards-folder
 Send pictures from a folder.  
@@ -93,17 +95,17 @@ Add the following object to your configuration file
 
 #### Example
 ```
-postcards-folder send --config ./my-config.json
+$ postcards-folder send --config ./my-config.json --message "coding rocks"
 ```
 
 ### Plugin: postcards-pexels  
 Send postcards with random pictures from www.pexels.com.
 
-No configuration is necessary in your `config.json` file
+No configuration is necessary in your configuration file
 
 #### Example
 ```
-postcards-pexels send --config ./config.json
+$ postcards-pexels send --config ./config.json --message "coding rocks"
 ```
 
 ### Build your own plugin
@@ -111,6 +113,7 @@ See `postcards-pexels` for a sample.
 
 1. Extend the class `postcards.Postcards()`
 2. Overwrite `def get_img_and_text(self, payload, cli_args)`
+3. Add CLI parser functionality by overwriting `enhance_*_subparser` methods
 
 ## Related
 - [postcard_creator_wrapper](https://github.com/abertschi/postcard_creator_wrapper) - Python API wrapper around the Swiss Postcard Creator
