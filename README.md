@@ -109,6 +109,12 @@ No configuration is necessary in your configuration file
 $ postcards-pexels send --config ./config.json --message "coding rocks"
 ```
 
+#### Slice a picture into tiles
+`postcards-folder` comes with a command called `slice` to create tiles from an image.
+This is useful to create a poster-like picture with postcards.
+
+Issue `postcards-folder slice --help` for more information.
+
 ### Plugin: postcards-random  
 Surprise, surprise! This plugin chooses an arbitrary picture from the 
 internet as postcard picture.
