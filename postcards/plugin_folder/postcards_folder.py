@@ -64,8 +64,7 @@ class PostcardsFolder(Postcards):
 
     def _make_absolute_path(self, path):
         if not os.path.isabs(path):
-            abs_dir = os.path.dirname(os.path.realpath(__file__))
-            return os.path.join(abs_dir, path)
+            return os.path.join(os.getcwd(), path)
         else:
             return path
 
