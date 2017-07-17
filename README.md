@@ -75,6 +75,7 @@ Postcard pictures and text can always be overwritten by commandline by issuing
 These plugins are available:
 - [Plugin: postcards-folder](#plugin-postcards-folder)
 - [Plugin: postcards-pexels](#plugin-postcards-pexels)
+- [Plugin: postcards-random](#plugin-postcards-random)
 - [Build your own plugin](#build-your-own-plugin)
 
 ### Plugin: postcards-folder
@@ -107,6 +108,27 @@ No configuration is necessary in your configuration file
 ```
 $ postcards-pexels send --config ./config.json --message "coding rocks"
 ```
+
+#### Slice a picture into tiles
+`postcards-folder` comes with a command called `slice` to create tiles from an image.
+This is useful to create a poster-like picture with postcards.
+
+Issue `postcards-folder slice --help` for more information.
+
+### Plugin: postcards-random  
+Surprise, surprise! This plugin chooses an arbitrary picture from the 
+internet as postcard picture.
+Picture may be inappropriate, so use with caution.
+
+No configuration is necessary in your configuration file
+
+#### Example
+```
+$ postcards-random send --config ./config.json \
+  --message "So much of life, it seems to me, is determined by pure randomness. \
+   So is this postcard picture."
+```
+
 
 ### Build your own plugin
 See `postcards-pexels` for a sample.

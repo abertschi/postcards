@@ -2,10 +2,14 @@
 # encoding: utf-8
 
 from postcards.postcards import Postcards
+from postcards.plugin_folder.slice_image import make_tiles, store_tiles
 import sys
 import os
 import random
 import ntpath
+from PIL import Image
+import os
+from time import gmtime, strftime
 
 
 class PostcardsFolder(Postcards):
@@ -14,6 +18,30 @@ class PostcardsFolder(Postcards):
     """
 
     supported_ext = ['.jpg', '.jpeg', '.png']
+
+    def can_handle_command(self, command):
+        return True if command in ['slice'] else False
+
+    def handle_command(self, command, args):
+        if command == 'slice':
+            self.slice_image(source_image=self._make_absolute_path(args.picture),
+                             tile_width=args.width, tile_height=args.height)
+
+    def build_plugin_subparser(self, subparsers):
+        parser_slice = subparsers.add_parser('slice', help='slice an image into tiles',
+                                             description='slice an image into tiles to create a poster. \n'
+                                                         + 'tiles need to be a multiple of 154x111 pixels '
+                                                         + 'in order not to be cropped.')
+        parser_slice.add_argument('picture',
+                                  type=str,
+                                  help='path to a picture to slice into tiles')
+
+        parser_slice.add_argument('width',
+                                  type=int,
+                                  help='tile width')
+        parser_slice.add_argument('height',
+                                  type=int,
+                                  help='tile height')
 
     def get_img_and_text(self, payload, cli_args):
         if not payload.get('folder'):
@@ -46,6 +74,22 @@ class PostcardsFolder(Postcards):
             'img': file,
             'text': ''
         }
+
+    def slice_image(self, source_image, tile_width, tile_height):
+        if not os.path.isfile(source_image):
+            self.logger.error('file {} does not exist'.format(source_image))
+            exit(1)
+
+        file = open(source_image, 'rb')
+        with Image.open(file) as image:
+            cwd = os.getcwd()
+            basename = strftime("slice_%Y-%m-%d_%H-%M-%S", gmtime())
+            directory = os.path.join(cwd, basename)
+
+            self.logger.info('slicing picture {} into tiles'.format(source_image))
+            tiles = make_tiles(image, tile_width=tile_width, tile_height=tile_height)
+            store_tiles(tiles, directory)
+            self.logger.info('picture sliced into {} tiles {}'.format(len(tiles), directory))
 
     def _move_to_sent(self, picture_folder, image_path):
         sent_folder = os.path.join(picture_folder, 'sent')
