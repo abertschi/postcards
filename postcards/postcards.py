@@ -330,7 +330,8 @@ class Postcards:
     def _build_root_parser(self, argv):
         parser = argparse.ArgumentParser(formatter_class=RawTextHelpFormatter,
                                          description='Postcards is a CLI for the Swiss Postcard Creator')
-        parser.epilog = 'sourcecode: https://github.com/abertschi/postcards'
+        parser.epilog = 'browse https://github.com/abertschi/postcards for documentation, \n' \
+                        'sourcecode and bug reports'
 
         parser.add_argument("-v", "--verbose", dest="verbose_count",
                             action="count", default=0,
