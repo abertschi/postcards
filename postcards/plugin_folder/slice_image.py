@@ -50,7 +50,7 @@ def store_tiles(tiles, directory, basename=None):
     :return: nothing
     """
     if not basename:
-        basename = strftime("cropped_%Y-%m-%d_%H-%M-%S", gmtime())
+        basename = strftime("sliced_%Y-%m-%d_%H-%M-%S", gmtime())
 
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -82,7 +82,7 @@ def _from_cli(image_location, title_width, tile_height):
     file = open(image_path, 'rb')
     with Image.open(file) as image:
         cwd = os.getcwd()
-        basename = strftime("cropped_%Y-%m-%d_%H-%M-%S", gmtime())
+        basename = strftime("sliced_%Y-%m-%d_%H-%M-%S", gmtime())
         directory = os.path.join(cwd, basename)
 
         tiles = make_tiles(image, tile_width=tile_width, tile_height=tile_height)

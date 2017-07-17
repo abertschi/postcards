@@ -18,6 +18,9 @@ LOGGING_TRACE_LVL = 5
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                     format='%(name)s (%(levelname)s): %(message)s')
 
+# logging.basicConfig(stream=sys.stdout, level=logging.INFO,
+#                     format='%(asctime)s %(name)s (%(levelname)s): %(message)s')
+
 DEFAULT_KEY = 'olMcxzq9Cq5lJpsoh4FvPKU'
 
 
@@ -37,6 +40,7 @@ class Postcards:
         self._build_subparser_send(subparsers)
         self._build_subparser_encrypt(subparsers)
         self._build_subparser_decrypt(subparsers)
+        self.build_plugin_subparser(subparsers)
 
         args = parser.parse_args()
         self._configure_logging(self.logger, args.verbose_count)
@@ -306,7 +310,7 @@ class Postcards:
     def _is_plugin(self):
         return not type(self).__name__ == 'Postcards'
 
-    def _create_logger(self, logger):
+    def _create_logger(self, logger=None):
         logging.addLevelName(LOGGING_TRACE_LVL, 'TRACE')
         logger = logger or logging.getLogger(inflection.underscore(type(self).__name__))
         setattr(logger, 'trace', lambda *args: logger.log(LOGGING_TRACE_LVL, *args))
@@ -331,6 +335,10 @@ class Postcards:
         parser.add_argument("-v", "--verbose", dest="verbose_count",
                             action="count", default=0,
                             help="increases log verbosity for each occurrence.")
+
+        # parser.add_argument("-l", "--log-timestamp", dest="log_timestamp",
+        #                     action="store_true",
+        #                     help="output log messages with timestamp")
         self.enhance_root_subparser(parser)
         return parser
 
@@ -414,7 +422,8 @@ class Postcards:
                                  nargs='?',
                                  metavar="KEY",
                                  default=(None,),
-                                 help='use this argument if your credentials are stored encrypted in configuration file. \n'
+                                 help='use this argument if your credentials are stored encrypted '
+                                      + 'in configuration file. \n'
                                       + 'set your custom key if you are not using default key. \n'
                                       + '(i.e. --key PASSWORD instead of --key)',
                                  dest='key')
@@ -428,6 +437,9 @@ class Postcards:
         :return: an image and text
         """
         return {'img': None, 'text': None}  # structure of object to return
+
+    def build_plugin_subparser(self, subparsers):
+        pass
 
     def enhance_root_subparser(self, parser):
         pass
