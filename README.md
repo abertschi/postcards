@@ -73,9 +73,9 @@ Postcard pictures and text can always be overwritten by commandline by issuing
 `--picture <picutre>` and `--message <message>`.
 
 These plugins are available:
-- [Plugin: postcards-folder](#Plugin:-postcards-folder)
-- [Plugin: postcards-pexels](#Plugin:-postcards-pexels)
-- [Build your own plugin](#Build-your-own-plugin)
+- [Plugin: postcards-folder](#plugin-postcards-folder)
+- [Plugin: postcards-pexels](#plugin-postcards-pexels)
+- [Build your own plugin](#build-your-own-plugin)
 
 ### Plugin: postcards-folder
 Send pictures from a folder.  
