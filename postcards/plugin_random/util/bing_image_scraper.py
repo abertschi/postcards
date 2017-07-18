@@ -67,6 +67,7 @@ if __name__ == '__main__':
             f = open(os.path.join(DIR, image_name), 'wb')
             f.write(raw_img)
             f.close()
+            print('downloaded ' + murl)
         except Exception as e:
             print("could not load : " + image_name)
             print(e)
