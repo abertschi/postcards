@@ -102,7 +102,7 @@ $ postcards-folder send --config ./my-config.json --message "coding rocks"
 ### Plugin: postcards-pexels  
 Send postcards with random pictures from www.pexels.com.
 
-No configuration is necessary in your configuration file
+No configuration is necessary in your configuration file.
 
 #### Example
 ```
@@ -120,7 +120,7 @@ Surprise, surprise! This plugin chooses an arbitrary picture from the
 internet as postcard picture.
 Picture may be inappropriate, so use with caution.
 
-No configuration is necessary in your configuration file
+No configuration is necessary in your configuration file.
 
 #### Example
 ```
