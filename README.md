@@ -9,7 +9,9 @@ python setup.py install
 Installation of `postcards` will expose these console scripts:
 ```
 postcards
-postcards-*
+postcards-folder
+postcards-pexels
+postcards-random
 ```
 Issue `--help` for more information.
 
