@@ -9,7 +9,9 @@ python setup.py install
 Installation of `postcards` will expose these console scripts:
 ```
 postcards
-postcards-*
+postcards-folder
+postcards-pexels
+postcards-random
 ```
 Issue `--help` for more information.
 
@@ -98,6 +100,11 @@ Add the following object to your configuration file
 ```
 $ postcards-folder send --config ./my-config.json --message "coding rocks"
 ```
+#### Slice a picture into tiles
+`postcards-folder` comes with a command called `slice` to create tiles from an image.
+This is useful to create a poster-like picture with postcards.
+
+Issue `postcards-folder slice --help` for more information.
 
 ### Plugin: postcards-pexels  
 Send postcards with random pictures from www.pexels.com.
@@ -108,12 +115,6 @@ No configuration is necessary in your configuration file.
 ```
 $ postcards-pexels send --config ./config.json --message "coding rocks"
 ```
-
-#### Slice a picture into tiles
-`postcards-folder` comes with a command called `slice` to create tiles from an image.
-This is useful to create a poster-like picture with postcards.
-
-Issue `postcards-folder slice --help` for more information.
 
 ### Plugin: postcards-random  
 Surprise, surprise! This plugin chooses an arbitrary picture from the 
@@ -128,7 +129,6 @@ $ postcards-random send --config ./config.json \
   --message "So much of life, it seems to me, is determined by pure randomness. \
    So is this postcard picture."
 ```
-
 
 ### Build your own plugin
 See `postcards-pexels` for a sample.
