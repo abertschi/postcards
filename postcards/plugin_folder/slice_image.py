@@ -74,7 +74,7 @@ def _make_absolute_path(path):
         return str(os.path.join(os.getcwd(), path))
 
 
-def _from_cli(image_location, title_width, tile_height):
+def _from_cli(image_path, tile_width, tile_height):
     if not os.path.isfile(image_path):
         logger.error('file {} does not exist'.format(image_path))
         exit(1)
