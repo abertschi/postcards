@@ -131,11 +131,21 @@ $ postcards-random send --config ./config.json \
 ```
 
 ### Build your own plugin
-See `postcards-pexels` for a sample.
-
 1. Extend the class `postcards.Postcards()`
 2. Overwrite `def get_img_and_text(self, payload, cli_args)`
 3. Add CLI parser functionality by overwriting `enhance_*_subparser` methods
+
+```python
+from postcards.postcards import Postcards
+
+class MyPlugin(Postcards):
+
+    def get_img_and_text(self, plugin_config, cli_args):
+      return {
+            'img': '...',
+            'text': '...'
+        }
+```
 
 ## Related
 - [postcard_creator_wrapper](https://github.com/abertschi/postcard_creator_wrapper) - Python API wrapper around the Swiss Postcard Creator
