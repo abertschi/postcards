@@ -137,6 +137,7 @@ $ postcards-random send --config ./config.json \
 
 ```python
 from postcards.postcards import Postcards
+import sys
 
 class MyPlugin(Postcards):
 
@@ -145,6 +146,10 @@ class MyPlugin(Postcards):
             'img': '...',
             'text': '...'
         }
+        
+if __name__ == '__main__':
+    MyPlugin().main(sys.argv[1:])
+        
 ```
 ```sh
 $ python my_plugin.py --help
