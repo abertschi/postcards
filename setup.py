@@ -29,23 +29,13 @@ setup(
     url='http://github.com/abertschi/postcards',
     author='Andrin Bertschi',
     install_requires=reqs,
-    description='',
+    description='A CLI for the Swiss Postcard Creator',
     packages=find_packages(exclude=("tmp",)),
     platforms='any',
     keywords='postcard swiss',
     classifiers=[
-        # How mature is this project? Common values are
-        #   3 - Alpha
-        #   4 - Beta
-        #   5 - Production/Stable
-        'Development Status :: 3 - Alpha',
-
-        # Indicate who your project is intended for
-        'Intended Audience :: Developers',
-
-        'Programming Language :: Python :: 3.6',
     ],
-    package_data={'postcards': ['template_config.json']},
+    package_data={'postcards': ['template_config.json', 'plugin_pexels/util/words.txt']},
     extras_require={
 
     },

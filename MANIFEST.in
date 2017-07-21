@@ -1,1 +1,4 @@
-include README.md postcards/template_config.json requirements.txt postcards/plugin_pexels/util/words.txt
+include README.md LICENSE postcards/template_config.json requirements.txt postcards/plugin_pexels/util/words.txt
+recursive-exclude tmp *
+recursive-exclude tmp-pic *
+exclude account.json config.json
