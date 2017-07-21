@@ -146,6 +146,9 @@ class MyPlugin(Postcards):
             'text': '...'
         }
 ```
+```sh
+$ python my_plugin.py --help
+```
 
 ## Related
 - [postcard_creator_wrapper](https://github.com/abertschi/postcard_creator_wrapper) - Python API wrapper around the Swiss Postcard Creator
