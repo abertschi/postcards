@@ -4,7 +4,7 @@ Postcards is a set of python scripts that allow you to send postcards with the S
 
 ## Install
 ```
-python setup.py install
+pip install postcards
 ```
 Installation of `postcards` will expose these console scripts:
 ```
