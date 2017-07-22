@@ -65,7 +65,7 @@ class Postcards:
             self.logger.error('config file already exist in current directory.')
             exit(1)
 
-        content = pkg_resources.resource_string(__name__, 'static/template_config.json').decode('utf-8')
+        content = pkg_resources.resource_string(__name__, 'template_config.json').decode('utf-8')
         file = open(target_location, 'w')
         file.write(content)
         file.close()
