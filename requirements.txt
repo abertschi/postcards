@@ -16,7 +16,6 @@ Naked==0.1.31
 olefile==0.44
 Pillow==4.1.1
 postcard-creator==0.0.1a12
-postcards==0.0.1a1
 py==1.4.34
 pycrypto==2.6.1
 pyjsparser==2.5.2
