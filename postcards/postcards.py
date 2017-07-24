@@ -92,51 +92,40 @@ class Postcards:
         random.shuffle(accounts)
         self._validate_config(config, accounts)
 
-        self.send(accounts=accounts,
-                  recipient=config.get('recipient'),
-                  sender=config.get('sender') if config.get('sender') else config.get('recipient'),
-                  mock=bool(args.mock),
-                  plugin_payload=config.get('payload'),
-                  picture_stream=self._read_picture(args.picture) if args.picture else None,
-                  message=args.message,
-                  cli_args=args)
-
-    def send(self, accounts, recipient, sender, mock=False, plugin_payload={},
-             message=None, picture_stream=None, cli_args=None):
-
-        if cli_args and cli_args.test_plugin:
-            self.logger.info('running plugin only (--test-plugin)')
-            self.get_img_and_text(plugin_payload, cli_args=cli_args)
-            exit(0)
+        plugin_payload = config.get('payload')
+        if args and args.test_plugin:
+            self.test_plugin_and_stop(plugin_payload, args)
 
         self.logger.info('checking for valid accounts')
-        pcc_wrapper = None
-        try_again_after = ''
-        for account in accounts:
-            token = postcard_creator.Token()
-            if token.has_valid_credentials(account.get('username'), account.get('password')):
-                pcc = postcard_creator.PostcardCreator(token)
-                if pcc.has_free_postcard():
-                    pcc_wrapper = pcc
-                    self.logger.info('account {} is valid'.format(account.get("username")))
-                    break
-                else:
-                    next_quota = pcc.get_quota().get('next')
-                    if next_quota < try_again_after or try_again_after is '':
-                        try_again_after = next_quota
-
-                    self.logger.debug('account {} is invalid. '.format(account.get("username")) +
-                                      'new quota available after {}.'.format(next_quota))
-            else:
-                self.logger.warning('wrong user credentials '
-                                    'for {}'.format(account.get("username")))
-
-        if not pcc_wrapper:
+        wrappers, try_again_after = self._create_pcc_wrappers(accounts,
+                                                              stop_on_first_valid=not args.all_accounts)
+        if not wrappers:
             self.logger.error('no valid account given. try again after {}'.format(try_again_after))
             exit(1)
 
+        self.send_cards(pcc_wrappers=wrappers,
+                        recipient=config.get('recipient'),
+                        sender=config.get('sender') if config.get('sender') else config.get('recipient'),
+                        mock=bool(args.mock),
+                        plugin_payload=plugin_payload,
+                        picture_stream=self._read_picture(args.picture) if args.picture else None,
+                        message=args.message,
+                        cli_args=args)
+
+    def send_cards(self, pcc_wrappers, recipient, sender, mock=False, plugin_payload={},
+                   message=None, picture_stream=None, cli_args={}):
+
+        for wrapper in pcc_wrappers:
+            self.send_card(wrapper, recipient, sender,
+                           mock=mock, plugin_payload=plugin_payload,
+                           message=message, picture_stream=picture_stream,
+                           cli_args=cli_args)
+
+    def send_card(self, pcc_wrapper, recipient, sender, mock=False, plugin_payload=None,
+                  message=None, picture_stream=None, cli_args={}):
+
         if self._is_plugin():
-            img_and_text = self.get_img_and_text(plugin_payload, cli_args=cli_args)
+            img_and_text = self.get_img_and_text(plugin_payload, cli_args=cli_args if cli_args else {})
 
             if not message:
                 message = img_and_text['text']
@@ -167,6 +156,37 @@ class Postcards:
     def decrypt_credential(self, key, credential):
         self.logger.info('decrypted credential:')
         self.logger.info(self._decrypt(key, credential))
+
+    def test_plugin_and_stop(self, payload={}, args={}):
+        self.logger.info('running plugin only (--test-plugin)')
+        self.get_img_and_text(payload, cli_args=args)
+        exit(0)
+
+    def _create_pcc_wrappers(self, accounts, stop_on_first_valid=True):
+        pcc_wrappers = []
+        try_again_after = ''
+
+        for account in accounts:
+            token = postcard_creator.Token()
+            if token.has_valid_credentials(account.get('username'), account.get('password')):
+                pcc = postcard_creator.PostcardCreator(token)
+                if pcc.has_free_postcard():
+                    pcc_wrappers.append(pcc)
+                    self.logger.info('account {} is valid'.format(account.get("username")))
+                    if stop_on_first_valid:
+                        break
+                else:
+                    next_quota = pcc.get_quota().get('next')
+                    if next_quota < try_again_after or try_again_after is '':
+                        try_again_after = next_quota
+
+                    self.logger.debug('account {} is invalid. '.format(account.get("username")) +
+                                      'new quota available after {}.'.format(next_quota))
+            else:
+                self.logger.warning('wrong user credentials '
+                                    'for {}'.format(account.get("username")))
+
+        return pcc_wrappers, try_again_after
 
     def _create_recipient(self, recipient):
         return postcard_creator.Recipient(prename=recipient.get('firstname'),
@@ -418,6 +438,11 @@ class Postcards:
                                  type=str,
                                  help='password credential. otherwise set in config or accounts file',
                                  dest='password')
+
+        parser_send.add_argument('--all-accounts',
+                                 action='store_true',
+                                 help='run send command as often as valid accounts available',
+                                 dest='all_accounts')
 
         parser_send.add_argument('-k', '--key',
                                  nargs='?',
