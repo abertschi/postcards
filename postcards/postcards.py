@@ -41,10 +41,10 @@ class Postcards:
         self._build_subparser_encrypt(subparsers)
         self._build_subparser_decrypt(subparsers)
         self.build_plugin_subparser(subparsers)
-        self.logger.debug(argv)
+        self.logger.verbose(argv)
         args = parser.parse_args()
         self._configure_logging(self.logger, args.verbose_count)
-        self.logger.debug(args)
+        self.logger.verbose(args)
 
         if args.mode == 'generate':
             self.do_command_generate(args)
