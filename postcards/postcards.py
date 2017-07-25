@@ -110,7 +110,7 @@ class Postcards:
                         mock=bool(args.mock),
                         plugin_payload=plugin_payload,
                         picture_stream=self._read_picture(args.picture) if args.picture else None,
-                        message=args.message,
+                        message=self._handle_message_argument(args.message),
                         cli_args=args)
 
     def send_cards(self, pcc_wrappers, recipient, sender, mock=False, plugin_payload={},
@@ -457,6 +457,15 @@ class Postcards:
                                       + '(i.e. --key PASSWORD instead of --key)',
                                  dest='key')
         self.enhance_send_subparser(parser_send)
+
+    def _handle_message_argument(self, message):
+        result = ''
+        if isinstance(message, list):
+            result = ' '.join(str(x) for x in message)
+        elif isinstance(message, str):
+            result = message
+
+        return result
 
     def get_img_and_text(self, plugin_payload, cli_args):
         """
