@@ -140,7 +140,7 @@ class Postcards:
 
         self.logger.info('uploading postcard to server')
         try:
-            pcc_wrapper.send_free_card(card, mock_send=mock)
+            self.delegate_send_free_card(pcc_wrapper, card, mock_send=mock)
         except Exception as e:
             self.logger.fatal('can not send postcard: ' + str(e))
             raise e
@@ -149,6 +149,9 @@ class Postcards:
             self.logger.info('postcard not sent because of mock=True')
         else:
             self.logger.info('postcard is successfully sent')
+
+    def delegate_send_free_card(self, pcc_wrapper, postcard, mock):
+        pcc_wrapper.delegate_send_free_card(postcard, mock_send=mock)
 
     def encrypt_credential(self, key, credential):
         self.logger.info('encrypted credential:')
