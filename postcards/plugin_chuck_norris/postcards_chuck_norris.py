@@ -7,7 +7,8 @@ import random
 import nltk
 
 jokes_location = os.path.dirname(os.path.realpath(__file__)) + '/chuck_norris_jokes.json'
-
+nltk.download('averaged_perceptron_tagger')
+nltk.download('punkt')
 
 class PostcardsChuckNorris(Postcards):
     """
@@ -37,7 +38,6 @@ class PostcardsChuckNorris(Postcards):
     def get_img_and_text(self, plugin_config, cli_args):
         jokes = self._read_jokes()
 
-        nltk.download('averaged_perceptron_tagger')
 
         if cli_args.category:
             jokes = self._filter_by_category(jokes, cli_args.category)
