@@ -43,6 +43,7 @@ setup(
         'console_scripts': ['postcards=postcards.postcards:main',
                             'postcards-folder=postcards.plugin_folder.postcards_folder:main',
                             'postcards-pexels=postcards.plugin_pexels.postcards_pexels:main',
-                            'postcards-random=postcards.plugin_random.postcards_random:main'],
+                            'postcards-random=postcards.plugin_random.postcards_random:main',
+                            'postcards-chuck-norris=postcards.plugin_chuck_norris.postcards_chuck_norris:main'],
     }
 )
