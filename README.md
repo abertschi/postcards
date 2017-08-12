@@ -171,6 +171,12 @@ if __name__ == '__main__':
 $ python my_plugin.py --help
 ```
 
+## Release notes
+
+### v0.0.5, 2017-08-12
+- Introduce new plugin `postcards-chuck-norris`
+- Add flag `-all-accounts` to global `postcards`
+
 ## Related
 - [postcard_creator_wrapper](https://github.com/abertschi/postcard_creator_wrapper) - Python API wrapper around the Swiss Postcard Creator
 
