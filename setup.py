@@ -35,7 +35,8 @@ setup(
     keywords='postcard swiss',
     classifiers=[
     ],
-    package_data={'postcards': ['template_config.json', 'plugin_pexels/util/words.txt']},
+    package_data={'postcards': ['template_config.json', 'plugin_pexels/util/words.txt',
+                                'plugin_chuck_norris/chuck_norris_jokes.json']},
     extras_require={
 
     },
