@@ -54,8 +54,16 @@ class PostcardsChuckNorris(Postcards):
         nouns = self._find_nouns(postcard_text)
 
         keyword = ''
-        if nouns:
-            keyword = nouns[0]
+        counter = 0
+        for n in nouns:
+            if counter > 2:
+                break
+            keyword += n + ' '
+            counter = counter + 1
+            self.logger.debug(n)
+
+        keyword = keyword.strip()
+        if keyword:
             try:
                 url = get_random_image_url(keyword=keyword)
             except Exception:
