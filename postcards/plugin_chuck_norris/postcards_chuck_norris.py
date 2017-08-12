@@ -10,6 +10,7 @@ jokes_location = os.path.dirname(os.path.realpath(__file__)) + '/chuck_norris_jo
 nltk.download('averaged_perceptron_tagger')
 nltk.download('punkt')
 
+
 class PostcardsChuckNorris(Postcards):
     """
     Send a postcard with a chuck norris joke.
@@ -23,21 +24,8 @@ class PostcardsChuckNorris(Postcards):
         parser.add_argument('--duplicate-file', default=None, type=str,
                             help='avoid sending the same joke twice by setting a file which stores already sent jokes')
 
-    def _filter_by_category(self, jokes, category):
-        result = []
-        for val in jokes:
-            if category in val.get('categories'): result.append(val)
-        return result
-
-    def _filter_by_exclude_id(self, jokes, exclude_id_list):
-        result = []
-        for val in jokes:
-            if val.get('id') not in exclude_id_list: result.append(val)
-        return result
-
-    def get_img_and_text(self, plugin_config, cli_args):
+    def get_img_and_text(self, plugin_payload, cli_args):
         jokes = self._read_jokes()
-
 
         if cli_args.category:
             jokes = self._filter_by_category(jokes, cli_args.category)
@@ -107,6 +95,20 @@ class PostcardsChuckNorris(Postcards):
             return path
         else:
             return str(os.path.join(os.getcwd(), path))
+
+    @staticmethod
+    def _filter_by_category(jokes, category):
+        result = []
+        for val in jokes:
+            if category in val.get('categories'): result.append(val)
+        return result
+
+    @staticmethod
+    def _filter_by_exclude_id(jokes, exclude_id_list):
+        result = []
+        for val in jokes:
+            if val.get('id') not in exclude_id_list: result.append(val)
+        return result
 
 
 def main():
