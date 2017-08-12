@@ -12,6 +12,7 @@ postcards
 postcards-folder
 postcards-pexels
 postcards-random
+postcards-chuck-norris
 ```
 Issue `--help` for more information.
 
@@ -78,6 +79,7 @@ These plugins are available:
 - [Plugin: postcards-folder](#plugin-postcards-folder)
 - [Plugin: postcards-pexels](#plugin-postcards-pexels)
 - [Plugin: postcards-random](#plugin-postcards-random)
+- [Plugin: postcards-chuck-norris](#plugin-postcards-chuck-norris)
 - [Build your own plugin](#build-your-own-plugin)
 
 ### Plugin: postcards-folder
@@ -129,6 +131,20 @@ $ postcards-random send --config ./config.json \
   --message "So much of life, it seems to me, is determined by pure randomness. \
    So is this postcard picture."
 ```
+
+### Plugin: postcards-chuck-norris  
+Chuck Norris's first program was kill -9!
+
+Receive postcards with Chuck Norris statements.
+A postcard picture is chosen according to the nouns found in the joke. Pictures are from www.pexels.com
+
+No configuration is necessary in your configuration file.
+
+#### Example
+```
+$ postcards-chuck-norris send --config ./config.json --category nerdy --duplicate-file duplicates.txt
+```
+- Issue `postcards-chuck-norris send --help` for more information about the additional flags.
 
 ### Build your own plugin
 1. Extend the class `postcards.Postcards()`
