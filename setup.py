@@ -35,7 +35,8 @@ setup(
     keywords='postcard swiss',
     classifiers=[
     ],
-    package_data={'postcards': ['template_config.json', 'plugin_pexels/util/words.txt']},
+    package_data={'postcards': ['template_config.json', 'plugin_pexels/util/words.txt',
+                                'plugin_chuck_norris/chuck_norris_jokes.json']},
     extras_require={
 
     },
@@ -43,6 +44,7 @@ setup(
         'console_scripts': ['postcards=postcards.postcards:main',
                             'postcards-folder=postcards.plugin_folder.postcards_folder:main',
                             'postcards-pexels=postcards.plugin_pexels.postcards_pexels:main',
-                            'postcards-random=postcards.plugin_random.postcards_random:main'],
+                            'postcards-random=postcards.plugin_random.postcards_random:main',
+                            'postcards-chuck-norris=postcards.plugin_chuck_norris.postcards_chuck_norris:main'],
     }
 )
