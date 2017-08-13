@@ -150,8 +150,8 @@ class Postcards:
         else:
             self.logger.info('postcard is successfully sent')
 
-    def delegate_send_free_card(self, pcc_wrapper, postcard, mock):
-        pcc_wrapper.delegate_send_free_card(postcard, mock_send=mock)
+    def delegate_send_free_card(self, pcc_wrapper, postcard, mock_send):
+        pcc_wrapper.send_free_card(postcard=postcard, mock_send=mock_send)
 
     def encrypt_credential(self, key, credential):
         self.logger.info('encrypted credential:')

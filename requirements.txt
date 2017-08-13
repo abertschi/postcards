@@ -17,7 +17,7 @@ nltk==3.2.4
 olefile==0.44
 Pillow==4.1.1
 postcard-creator==0.0.2
-postcards==0.0.5
+postcards==0.0.6
 py==1.4.34
 pycrypto==2.6.1
 pyjsparser==2.5.2
