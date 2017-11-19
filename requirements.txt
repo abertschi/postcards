@@ -19,7 +19,7 @@ Pillow==4.1.1
 postcard-creator==0.0.2
 postcards==0.0.6
 py==1.4.34
-pycrypto==2.6.1
+pycryptodome==3.4.5
 pyjsparser==2.5.2
 pytest==3.1.2
 pytest-runner==2.11.1
