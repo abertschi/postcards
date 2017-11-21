@@ -420,7 +420,7 @@ class Postcards:
                                  default='',
                                  type=str,
                                  nargs=argparse.PARSER,  # treat arg as one string, not array
-                                 help='postcard message',
+                                 help='postcard message. you can use HTML tags to format the message (e.g. <br/>).',
                                  dest='message')
 
         parser_send.add_argument('--mock',
