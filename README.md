@@ -3,9 +3,18 @@
 Postcards is a set of python scripts that allow you to send postcards with the Swiss Postcard Creator.
 
 ## Install
-```
+```sh
 pip install postcards
 ```
+
+or install from source (checkout latest tag)
+
+```sh
+git clone git@github.com:abertschi/postcards.git
+cd postcards/
+pip install .
+```
+
 Installation of `postcards` will expose these console scripts:
 ```
 postcards
@@ -54,7 +63,7 @@ Issue `postcards send --help` for more information about sending postcards.
 # Send a postcard
 $ postcards send --config config.json \
     --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
-    --message "Happy coding"
+    --message "Happy <br/> coding!"
 
 
 # Encrypt user passwords to store in configuration file
@@ -172,12 +181,24 @@ $ python my_plugin.py --help
 ```
 
 ## Release notes
+### v0.0.7, 2017-11-22
+- Bug fixing release
+- Remove unused dependencies
+- update `postcard-creator` API wrapper to `0.0.6`
+
 ### v0.0.6, 2017-08-13
 - Bug fixing
 
 ### v0.0.5, 2017-08-12
 - Introduce new plugin `postcards-chuck-norris`
 - Add flag `--all-accounts` to global `postcards`
+
+
+## Development notes
+```sh
+pip install -r requirements-dev.txt
+pip install -e .
+```
 
 ## Related
 - [postcard_creator_wrapper](https://github.com/abertschi/postcard_creator_wrapper) - Python API wrapper around the Swiss Postcard Creator
