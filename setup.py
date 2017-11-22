@@ -2,13 +2,11 @@ from setuptools import setup, find_packages
 from pip.req import parse_requirements
 import codecs
 import os
-import sys
 import re
 
 here = os.path.abspath(os.path.dirname(__file__))
-install_reqs = parse_requirements('./requirements.txt', session='hack')
+install_reqs = parse_requirements(here + '/requirements.txt', session='hack')
 reqs = [str(ir.req) for ir in install_reqs]
-
 
 def read(*parts):
     return codecs.open(os.path.join(here, *parts), 'r').read()
@@ -22,13 +20,11 @@ def find_version(*file_paths):
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
 
-
 setup(
     name='postcards',
     version=find_version('postcards', '__init__.py'),
     url='http://github.com/abertschi/postcards',
     author='Andrin Bertschi',
-    install_requires=reqs,
     description='A CLI for the Swiss Postcard Creator',
     packages=find_packages(exclude=("tmp",)),
     platforms='any',
@@ -37,9 +33,13 @@ setup(
     ],
     package_data={'postcards': ['template_config.json', 'plugin_pexels/util/words.txt',
                                 'plugin_chuck_norris/chuck_norris_jokes.json']},
-    extras_require={
+    # dependency_links=[
+    #     'https://github.com/charlesthk/python-resize-image/tarball/e4a7e5a8f69ebf491ef069c13530d159594e2c87#egg=resizeimage'
+    # ],
+    setup_requires=[
+    ],
 
-    },
+    install_requires=reqs,
     entry_points={
         'console_scripts': ['postcards=postcards.postcards:main',
                             'postcards-folder=postcards.plugin_folder.postcards_folder:main',
