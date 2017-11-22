@@ -33,9 +33,6 @@ setup(
     ],
     package_data={'postcards': ['template_config.json', 'plugin_pexels/util/words.txt',
                                 'plugin_chuck_norris/chuck_norris_jokes.json']},
-    # dependency_links=[
-    #     'https://github.com/charlesthk/python-resize-image/tarball/e4a7e5a8f69ebf491ef069c13530d159594e2c87#egg=resizeimage'
-    # ],
     setup_requires=[
     ],
 
