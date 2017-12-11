@@ -197,7 +197,8 @@ class Postcards:
                                           lastname=recipient.get('lastname'),
                                           street=recipient.get('street'),
                                           zip_code=recipient.get('zipcode'),
-                                          place=recipient.get('city'))
+                                          place=recipient.get('city'),
+                                         salutation=recipient.get('salutation') if recipient.get('salutation') else '')
 
     def _create_sender(self, sender):
         return postcard_creator.Sender(prename=sender.get('firstname'),
