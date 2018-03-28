@@ -181,6 +181,10 @@ $ python my_plugin.py --help
 ```
 
 ## Release notes
+### v0.0.8, 2018-03-28
+- v0.0.7 broke due to changes in the postcardcreator API
+ - update `postcard-creator` to `0.0.8`
+
 ### v0.0.7, 2017-11-22
 - Bug fixing release
 - Remove unused dependencies
