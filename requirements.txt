@@ -8,7 +8,7 @@ Js2Py==0.50
 nltk==3.2.5
 olefile==0.44
 Pillow==4.3.0
-postcard-creator==0.0.6
+postcard-creator==0.0.8
 pyjsparser==2.5.2
 python-resize-image==1.1.11
 pytz==2017.3

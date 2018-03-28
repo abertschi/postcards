@@ -22,7 +22,7 @@ def find_version(*file_paths):
 
 setup(
     name='postcards',
-    version='0.0.7',
+    version='0.0.8',
     url='http://github.com/abertschi/postcards',
     author='Andrin Bertschi',
     description='A CLI for the Swiss Postcard Creator',
