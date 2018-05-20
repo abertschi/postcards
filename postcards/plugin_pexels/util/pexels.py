@@ -60,7 +60,7 @@ def get_random_image_url(keyword=None, number=1, _count=0):
     elif keyword:
         raise Exception("No image found for keyword: " + keyword)
     else:
-        raise Exception(f"Something is broke, tried {count} times but no images")
+        raise Exception("Something is broke, tried {count} times but no images")
 
 
 def read_words():
