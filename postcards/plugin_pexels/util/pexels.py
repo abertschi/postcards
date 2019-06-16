@@ -33,7 +33,7 @@ def get_random_image_url(keyword=None, number=1, _count=0):
         search_term = keyword
     else:
         search_term = random.choice(words)
-    r = requests.get(pexels_search_url + search_term)
+    r = requests.get(pexels_search_url + search_term, headers=headers)
     soup = BeautifulSoup(r.text, 'html.parser')
     imgs = []
 
@@ -60,7 +60,7 @@ def get_random_image_url(keyword=None, number=1, _count=0):
     elif keyword:
         raise Exception("No image found for keyword: " + keyword)
     else:
-        raise Exception(f"Something is broke, tried {count} times but no images")
+        raise Exception(f"Something is broken, tried {count} times but no images")
 
 
 def read_words():
