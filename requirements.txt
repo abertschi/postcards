@@ -5,7 +5,7 @@ cookies==2.2.1
 idna==2.6
 inflection==0.3.1
 Js2Py==0.50
-nltk==3.2.5
+nltk==3.4.5
 olefile==0.44
 Pillow==6.2.0
 postcard-creator==0.0.8
