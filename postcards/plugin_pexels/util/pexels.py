@@ -14,7 +14,7 @@ message_bytes = base64.b64decode(base64_bytes)
 api_key = message_bytes.decode('ascii')
 
 # instantiate PyPexels object
-py_pexel = PyPexels(api_key=api_key)
+py_pexel = PyPexels(api_key=api_key.rstrip())
 
 words_location = os.path.dirname(os.path.realpath(__file__)) + '/words.txt'
 pexels_search_url = 'http://api.pexels.com/v1/search?query='
