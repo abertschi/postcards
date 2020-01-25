@@ -29,7 +29,8 @@ def get_random_image_url(keyword=None):
         print('Warn: keywords are no longer supported. image is chosen randomly.')
 
     photos = pexels.curated(per_page=1, page=random.randint(1, 1000))
-    return next(photos.entries).url
+    entry = next(photos.entries)
+    return entry.src['original']
 
 
 def read_from_url(url):
