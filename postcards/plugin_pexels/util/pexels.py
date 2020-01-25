@@ -4,9 +4,20 @@ from bs4 import BeautifulSoup
 import os
 import urllib
 import sys
+import base64
+from pypexels import PyPexels
+
+#Decode pexels API key from abertschi
+base64_message = 'NTYzNDkyYWQ2ZjkxNzAwMDAxMDAwMDAxNmEzNTcyNDA4YmVjNGFmNzc0YTYzYTRjNjdjZGNkMGIK'
+base64_bytes = base64_message.encode('ascii')
+message_bytes = base64.b64decode(base64_bytes)
+api_key = message_bytes.decode('ascii')
+
+# instantiate PyPexels object
+py_pexel = PyPexels(api_key=api_key)
 
 words_location = os.path.dirname(os.path.realpath(__file__)) + '/words.txt'
-pexels_search_url = 'https://www.pexels.com/search/'
+pexels_search_url = 'http://api.pexels.com/v1/search?query='
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
@@ -33,14 +44,17 @@ def get_random_image_url(keyword=None, number=1, _count=0):
         search_term = keyword
     else:
         search_term = random.choice(words)
-    r = requests.get(pexels_search_url + search_term, headers=headers)
-    soup = BeautifulSoup(r.text, 'html.parser')
+    search_results = py_pexel.search(query=search_term, per_page=40)
     imgs = []
-
-    for article in soup.findAll("article", {"class": "photo-item"}):
-        src = article.a.img['src'].split('?')[0]
-        imgs.append(src)
-
+    while True:
+       for photo in search_results.entries:
+           #print(photo.id, photo.photographer, photo.url)
+           src = photo.src.get('original')
+           imgs.append(src)
+       if not search_results.has_next:
+           break
+       search_results = search_results.get_next_page()
+    
     if imgs:
         chosen = []
         if number > len(imgs):
