@@ -10,6 +10,7 @@ olefile==0.44
 Pillow==6.2.0
 postcard-creator==0.0.8
 pyjsparser==2.5.2
+pypexels==1.0.0b4
 python-resize-image==1.1.11
 pytz==2017.3
 requests==2.18.4
