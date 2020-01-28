@@ -84,7 +84,7 @@ $ postcards send --config config.json \
 Postcards is designed in a plugin based approach. 
 Plugins set the text and / or picture of your postcards.
 
-Postcard pictures and text can always be overwritten by commandline by issuing 
+- Postcard pictures and text can always be overwritten by commandline by issuing 
 `--picture <picutre>` and `--message <message>`.
 
 These plugins are available:
@@ -122,8 +122,8 @@ This is useful to create a poster-like picture with postcards.
 Issue `postcards-folder slice --help` for more information.
 
 ### Plugin: postcards-yaml
-Specify what picture and text to send in a yaml file. This allows for bulk send
-and extends `postcards-folder` with a yaml file.
+Specify what picture and text to send in a YAML file. This allows for bulk send
+and extends `postcards-folder` with a YAML configuration file.
 
 
 Add the following object to your configuration file
@@ -137,7 +137,9 @@ Add the following object to your configuration file
 }
 ```
 
-Create a yaml file in the following format:
+Create a YAML file in the following format (`./pictures/send.yaml` in
+the example above);
+
 ```yaml
 - This is the text for postcard 1
 - this-location-to-picture-1.jpg
@@ -147,16 +149,22 @@ Create a yaml file in the following format:
 
 - Entry `i` contains text, and entry `i+1` contains the relative location of the picture.
 - `For all i modulo 2 == 0`, `i >= 0`
-- The location of the image consist of the `folder` path set in `config.json` and the location in the yaml file.
+- The absolute location of the image consist of the `folder` path set
+in `config.json` 
+and the location in the yaml file.
+
+The coresponding entries are removed from the YAML file if a postcard is sent.
 
 #### Example
 ```
 $ postcards-yaml send --config ./config.json
 ```
 
-#### Verify yaml file
-You can verify the yaml file with `postcards-yaml verify`.
-This command checks that all pictures exist and the yaml has the proper format.
+#### Verify YAML file
+You can verify the YAML file with `postcards-yaml verify`.
+This command checks that all pictures exist and the YAML has the
+proper format.
+
 
 ### Plugin: postcards-pexels  
 Send postcards with random pictures from www.pexels.com.
