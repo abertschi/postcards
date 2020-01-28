@@ -123,10 +123,10 @@ Issue `postcards-folder slice --help` for more information.
 
 ### Plugin: postcards-yaml
 Specify what picture and text to send in a YAML file. This allows for bulk send
-and extends `postcards-folder` with a YAML configuration file.
+and extends `postcards-folder` with a YAML file.
 
 
-Add the following object to your configuration file
+Add the following object to your configuration file (`config.json`);
 ```json
 {
  "payload": {
@@ -148,12 +148,10 @@ the example above);
 ```
 
 - Entry `i` contains text, and entry `i+1` contains the relative location of the picture.
-- `For all i modulo 2 == 0`, `i >= 0`
-- The absolute location of the image consist of the `folder` path set
-in `config.json` 
-and the location in the yaml file.
-
-The coresponding entries are removed from the YAML file if a postcard is sent.
+- For all `i modulo 2 == 0`, `i >= 0`
+- The absolute location of the image consists of the `folder` path set
+in `config.json` and the location in the yaml file.
+- The coresponding entries are removed from the YAML file if a postcard is sent and they are sent in descending order.
 
 #### Example
 ```
@@ -162,9 +160,8 @@ $ postcards-yaml send --config ./config.json
 
 #### Verify YAML file
 You can verify the YAML file with `postcards-yaml verify`.
-This command checks that all pictures exist and the YAML has the
+This command checks that all pictures exist and the YAML file has the
 proper format.
-
 
 ### Plugin: postcards-pexels  
 Send postcards with random pictures from www.pexels.com.
@@ -233,10 +230,10 @@ $ python my_plugin.py --help
 
 ## Release notes
 ### v1.0, 2020-01-28 (unreleased)
-- plugin_random: needs python 3.6 to work, newer versions are currently not supported
-- plugin_pexel: use offical API, keywoard is no longer supported
-- plugin_yaml: introduction of new plugin
-  - `postcards-yaml` reads a yaml file with text/picture entries.
+- `plugin_random`: needs python 3.6 to work, newer versions are currently not supported
+- `plugin_pexel`: use offical API, keywoard is no longer supported
+- `plugin_yaml`: introduction of new plugin
+  - `postcards-yaml` reads a YAML file with text/picture entries. This allows for scripted bulk sending.
   - see `postcards-yaml -h` or documentation above for more information
 
 ### v0.0.8, 2018-03-28
