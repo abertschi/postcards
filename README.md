@@ -150,9 +150,9 @@ the example above);
 
 - Entry `i` contains text, and entry `i+1` contains the relative location of the picture.
 - For all `i modulo 2 == 0`, `i >= 0`
-- The absolute location of the image consists of the `folder` path set
-in `config.json` and the location in the yaml file.
-- The coresponding entries are removed from the YAML file if a postcard is sent and they are sent in descending order.
+- The absolute location of the image consists of the `folder` path in `config.json` and the image location in the YAML file.
+- Entries are removed from the YAML file if a postcard is sent.
+- Entries are picked as the appear in the YAML file.
 
 #### Example
 ```
