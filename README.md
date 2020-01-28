@@ -158,6 +158,7 @@ in `config.json` and the location in the yaml file.
 ```
 $ postcards-yaml send --config ./config.json
 ```
+- see directory `./example/plugin_yaml/` for more examples.
 
 #### Validate YAML file
 You can verify the YAML file with `postcards-yaml validate -c config.json`.
