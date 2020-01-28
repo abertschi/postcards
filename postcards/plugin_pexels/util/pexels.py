@@ -16,6 +16,7 @@ headers = {
 
 pexels = PyPexels(api_key=base64.b64decode(key).decode('ascii'))
 
+
 def get_random_image(keyword=None):
     if keyword is not None:
         print('Warn: keywords are no longer supported. image is chosen randomly.')
