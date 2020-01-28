@@ -159,8 +159,8 @@ in `config.json` and the location in the yaml file.
 $ postcards-yaml send --config ./config.json
 ```
 
-#### Verify YAML file
-You can verify the YAML file with `postcards-yaml verify`.
+#### Validate YAML file
+You can verify the YAML file with `postcards-yaml validate -c config.json`.
 This command checks that all pictures exist and the YAML file has the
 proper format.
 
