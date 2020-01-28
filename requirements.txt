@@ -13,8 +13,9 @@ pyjsparser==2.5.2
 pypexels==1.0.0b4
 python-resize-image==1.1.11
 pytz==2017.3
-requests==2.18.4
+PyYAML==5.3
+requests==2.22.0
 requests-toolbelt==0.8.0
 six==1.11.0
 tzlocal==1.4
-urllib3==1.24.2
+urllib3==1.25.8
