@@ -22,6 +22,7 @@ Installation of `postcards` will expose these console scripts:
 ```
 postcards
 postcards-folder
+postcards-yaml
 postcards-pexels
 postcards-random
 postcards-chuck-norris
