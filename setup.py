@@ -1,5 +1,10 @@
+try: # for pip >= 10
+    from pip._internal.req import parse_requirements
+except ImportError: # for pip <= 9.0.3
+    from pip.req import parse_requirements
+
 from setuptools import setup, find_packages
-from pip.req import parse_requirements
+
 import codecs
 import os
 import re
@@ -40,6 +45,7 @@ setup(
     entry_points={
         'console_scripts': ['postcards=postcards.postcards:main',
                             'postcards-folder=postcards.plugin_folder.postcards_folder:main',
+                            'postcards-yaml=postcards.plugin_folder_yaml.postcards_folder_yaml:main',
                             'postcards-pexels=postcards.plugin_pexels.postcards_pexels:main',
                             'postcards-random=postcards.plugin_random.postcards_random:main',
                             'postcards-chuck-norris=postcards.plugin_chuck_norris.postcards_chuck_norris:main'],

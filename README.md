@@ -22,6 +22,7 @@ Installation of `postcards` will expose these console scripts:
 ```
 postcards
 postcards-folder
+postcards-yaml
 postcards-pexels
 postcards-random
 postcards-chuck-norris
@@ -84,11 +85,12 @@ $ postcards send --config config.json \
 Postcards is designed in a plugin based approach. 
 Plugins set the text and / or picture of your postcards.
 
-Postcard pictures and text can always be overwritten by commandline by issuing 
+- Postcard pictures and text can always be overwritten by commandline by issuing 
 `--picture <picutre>` and `--message <message>`.
 
 These plugins are available:
 - [Plugin: postcards-folder](#plugin-postcards-folder)
+- [Plugin: postcards-yaml](#plugin-postcards-yaml)
 - [Plugin: postcards-pexels](#plugin-postcards-pexels)
 - [Plugin: postcards-random](#plugin-postcards-random)
 - [Plugin: postcards-chuck-norris](#plugin-postcards-chuck-norris)
@@ -120,6 +122,49 @@ This is useful to create a poster-like picture with postcards.
 
 Issue `postcards-folder slice --help` for more information.
 
+### Plugin: postcards-yaml
+Specify what picture and text to send in a YAML file. This allows for bulk send
+and extends `postcards-folder` with a YAML file.
+
+
+Add the following object to your configuration file (`config.json`);
+```json
+{
+ "payload": {
+    "folder": "./pictures",
+    "yaml": "./pictures/send.yaml",
+    "move": true
+  }
+}
+```
+
+Create a YAML file in the following format (`./pictures/send.yaml` in
+the example above);
+
+```yaml
+- This is the text for postcard 1
+- this-location-to-picture-1.jpg
+- This is the text for postcard 2
+- this-is-location-to-picture-2.jpg
+```
+
+- Entry `i` contains text, and entry `i+1` contains the relative location of the picture.
+- For all `i modulo 2 == 0`, `i >= 0`
+- The absolute location of the image consists of the `folder` path in `config.json` and the image location in the YAML file.
+- Entries are removed from the YAML file if a postcard is sent.
+- Entries are picked as the appear in the YAML file.
+
+#### Example
+```
+$ postcards-yaml send --config ./config.json
+```
+- see directory `./example/plugin_yaml/` for more examples.
+
+#### Validate YAML file
+You can verify the YAML file with `postcards-yaml validate -c config.json`.
+This command checks that all pictures exist and the YAML file has the
+proper format.
+
 ### Plugin: postcards-pexels  
 Send postcards with random pictures from www.pexels.com.
 
@@ -136,6 +181,8 @@ internet as postcard picture.
 Picture may be inappropriate, so use with caution.
 
 No configuration is necessary in your configuration file.
+
+Not tested with python 3.7 or later. Needs python 3.6
 
 #### Example
 ```
@@ -184,6 +231,13 @@ $ python my_plugin.py --help
 ```
 
 ## Release notes
+### v1.0, 2020-01-28 (unreleased)
+- `plugin_random`: needs python 3.6 to work, newer versions are currently not supported
+- `plugin_pexel`: use offical API, keywoard is no longer supported
+- `plugin_yaml`: introduction of new plugin
+  - `postcards-yaml` reads a YAML file with text/picture entries. This allows for scripted bulk sending.
+  - see `postcards-yaml -h` or documentation above for more information
+
 ### v0.0.8, 2018-03-28
 - v0.0.7 broke due to changes in the postcardcreator API
  - update `postcard-creator` to `0.0.8`

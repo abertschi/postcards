@@ -1,0 +1,27 @@
+{
+  "recipient": {
+    "firstname": "fill out",
+    "lastname": "fill out",
+    "street": "fill out",
+    "zipcode": "fill out",
+    "city": "fill out"
+  },
+  "sender": {
+    "firstname": "fill out",
+    "lastname": "fill out",
+    "street": "fill out",
+    "zipcode": "fill out",
+    "city": "fill out"
+  },
+  "accounts": [
+    {
+      "username": "fill out",
+      "password": "fill out"
+    }
+  ],
+  "payload": {
+    "folder": "./pics",
+    "yaml": "./postcards.yaml",
+    "move": true
+  }
+}
