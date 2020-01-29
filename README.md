@@ -227,7 +227,7 @@ $ python my_plugin.py --help
 ```
 
 ## Release notes
-### v1.0, 2020-01-28 (unreleased)
+### v1.0, 2020-01-28
 - `plugin_random`: needs python 3.6 to work, newer versions are currently not supported
 - `plugin_pexel`: use official pexel API, keyword is no longer supported
 - `plugin_yaml`: introduction of new plugin
