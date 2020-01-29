@@ -10,7 +10,7 @@ This package requires python 3.6 or later.
 pip install postcards
 ```
 
-or install from source (checkout latest tag)
+or install from source
 
 ```sh
 git clone git@github.com:abertschi/postcards.git
@@ -85,7 +85,7 @@ $ postcards send --config config.json \
 Postcards is designed in a plugin based approach. 
 Plugins set the text and / or picture of your postcards.
 
-- Postcard pictures and text can always be overwritten by commandline by issuing 
+Postcard pictures and text can always be overwritten by commandline by issuing 
 `--picture <picutre>` and `--message <message>`.
 
 These plugins are available:
@@ -123,7 +123,7 @@ This is useful to create a poster-like picture with postcards.
 Issue `postcards-folder slice --help` for more information.
 
 ### Plugin: postcards-yaml
-Specify what picture and text to send in a YAML file. This allows for bulk send
+Specify what picture and text to send in a YAML file. This allows for scripted bulk sending
 and extends `postcards-folder` with a YAML file.
 
 
@@ -138,8 +138,7 @@ Add the following object to your configuration file (`config.json`);
 }
 ```
 
-Create a YAML file in the following format (`./pictures/send.yaml` in
-the example above);
+Create a YAML file in the following format;
 
 ```yaml
 - This is the text for postcard 1
@@ -162,7 +161,7 @@ $ postcards-yaml send --config ./config.json
 
 #### Validate YAML file
 You can verify the YAML file with `postcards-yaml validate -c config.json`.
-This command checks that all pictures exist and the YAML file has the
+This command checks that all pictures exist and the YAML file has
 proper format.
 
 ### Plugin: postcards-pexels  
@@ -175,14 +174,13 @@ No configuration is necessary in your configuration file.
 $ postcards-pexels send --config ./config.json --message "coding rocks"
 ```
 
-### Plugin: postcards-random  
+### Plugin: postcards-random
 Surprise, surprise! This plugin chooses an arbitrary picture from the 
 internet as postcard picture.
 Picture may be inappropriate, so use with caution.
 
 No configuration is necessary in your configuration file.
-
-Not tested with python 3.7 or later. Needs python 3.6
+Needs python 3.6, newer versions cause some errors (TODO).
 
 #### Example
 ```
@@ -195,8 +193,6 @@ $ postcards-random send --config ./config.json \
 Chuck Norris's first program was kill -9!
 
 Receive postcards with Chuck Norris statements.
-A postcard picture is chosen according to the nouns found in the joke. Pictures are from www.pexels.com
-
 No configuration is necessary in your configuration file.
 
 #### Example
@@ -233,7 +229,7 @@ $ python my_plugin.py --help
 ## Release notes
 ### v1.0, 2020-01-28 (unreleased)
 - `plugin_random`: needs python 3.6 to work, newer versions are currently not supported
-- `plugin_pexel`: use offical API, keywoard is no longer supported
+- `plugin_pexel`: use official pexel API, keyword is no longer supported
 - `plugin_yaml`: introduction of new plugin
   - `postcards-yaml` reads a YAML file with text/picture entries. This allows for scripted bulk sending.
   - see `postcards-yaml -h` or documentation above for more information
