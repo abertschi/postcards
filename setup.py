@@ -27,7 +27,7 @@ def find_version(*file_paths):
 
 setup(
     name='postcards',
-    version='0.0.8',
+    version='1.0',
     url='http://github.com/abertschi/postcards',
     author='Andrin Bertschi',
     description='A CLI for the Swiss Postcard Creator',
@@ -36,7 +36,7 @@ setup(
     keywords='postcard swiss',
     classifiers=[
     ],
-    package_data={'postcards': ['template_config.json', 'plugin_pexels/util/words.txt',
+    package_data={'postcards': ['template_config.json',
                                 'plugin_chuck_norris/chuck_norris_jokes.json']},
     setup_requires=[
     ],
