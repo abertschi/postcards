@@ -228,7 +228,7 @@ $ python my_plugin.py --help
 
 ## Release notes
 
-### v1.0, 2020-01-30
+### v1.1, 2020-01-30
 - update to postcard-creator 1.1. swissid authentication is now supported
 
 ### v1.0, 2020-01-28
