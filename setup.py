@@ -1,8 +1,3 @@
-try: # for pip >= 10
-    from pip._internal.req import parse_requirements
-except ImportError: # for pip <= 9.0.3
-    from pip.req import parse_requirements
-
 from setuptools import setup, find_packages
 
 import codecs
@@ -10,8 +5,10 @@ import os
 import re
 
 here = os.path.abspath(os.path.dirname(__file__))
-install_reqs = parse_requirements(here + '/requirements.txt', session='hack')
-reqs = [str(ir.req) for ir in install_reqs]
+reqs = None
+reqs_path = here + '/requirements.txt'
+with open(reqs_path) as reqs_file:
+    reqs = reqs_file.read().splitlines()
 
 def read(*parts):
     return codecs.open(os.path.join(here, *parts), 'r').read()
