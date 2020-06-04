@@ -227,6 +227,9 @@ $ python my_plugin.py --help
 ```
 
 ## Release notes
+### v1.2 (HEAD, unreleased)
+- `plugin_folder`: introduce `.priority` folder to prioritize images #40
+- mics: removed dependency on internal pip api #38
 
 ### v1.1, 2020-01-30
 - update to postcard-creator 1.1. swissid authentication is now supported
