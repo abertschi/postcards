@@ -18,6 +18,7 @@ class PostcardsFolder(Postcards):
     """
 
     supported_ext = ['.jpg', '.jpeg', '.png']
+    high_prio_folder = '.priority'
 
     def can_handle_command(self, command):
         return True if command in ['slice'] else False
@@ -49,19 +50,12 @@ class PostcardsFolder(Postcards):
             exit(1)
 
         folder = self._make_absolute_path(payload.get('folder'))
+        img_path = self._pick_image(folder)
 
-        candidates = []
-        for file in os.listdir(folder):
-            for ext in self.supported_ext:
-                if file.endswith(ext):
-                    candidates.append(file)
-
-        if not candidates:
+        if not img_path:
             self.logger.error("no images in folder " + folder)
             exit(1)
 
-        img_name = random.choice(candidates)
-        img_path = os.path.join(folder, img_name)
         move_info = 'moving to sent folder' if payload.get('move') else 'no move'
 
         self.logger.info('choosing image {} ({})'.format(img_path, move_info))
@@ -90,6 +84,29 @@ class PostcardsFolder(Postcards):
             tiles = make_tiles(image, tile_width=tile_width, tile_height=tile_height)
             store_tiles(tiles, directory)
             self.logger.info('picture sliced into {} tiles {}'.format(len(tiles), directory))
+
+    def _pick_image(self, folder):
+        candidates = []
+        high_prio = os.path.join(folder, self.high_prio_folder)
+        if os.path.exists(high_prio):
+            for file in os.listdir(high_prio):
+                for ext in self.supported_ext:
+                    if file.endswith(ext):
+                        candidates.append(os.path.join(self.high_prio_folder, file))
+
+        if not candidates:
+            for file in os.listdir(folder):
+                for ext in self.supported_ext:
+                    if file.endswith(ext):
+                        candidates.append(file)
+
+        if not candidates:
+            self.logger.error("no images in folder " + folder)
+            exit(1)
+
+        img_name = random.choice(candidates)
+        img_path = os.path.join(folder, img_name)
+        return img_path
 
     def _move_to_sent(self, picture_folder, image_path):
         sent_folder = os.path.join(picture_folder, 'sent')
