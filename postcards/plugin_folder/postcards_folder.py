@@ -91,13 +91,13 @@ class PostcardsFolder(Postcards):
         if os.path.exists(high_prio):
             for file in os.listdir(high_prio):
                 for ext in self.supported_ext:
-                    if file.endswith(ext):
+                    if file.lower().endswith(ext):
                         candidates.append(os.path.join(self.high_prio_folder, file))
 
         if not candidates:
             for file in os.listdir(folder):
                 for ext in self.supported_ext:
-                    if file.endswith(ext):
+                    if file.lower().endswith(ext):
                         candidates.append(file)
 
         if not candidates:
