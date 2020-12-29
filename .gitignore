@@ -109,3 +109,5 @@ tmp
 accounts.json
 pictures
 run.sh
+tmp/
+dist/

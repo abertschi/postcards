@@ -81,6 +81,15 @@ $ postcards send --config config.json \
     --key \
     --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
     --message "Happy coding"
+    
+# Increase verbosity
+$ postcards -v send --config config.json \
+    --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
+    --message "Happy <br/> coding!"
+
+# - Add more 'v' to increase verbosity, i.e. -vv
+# - Note: The -v / --verbose flag belongs to the root parser, add it after 'postcards' and before 'send'     
+    
 ```
 
 ## Plugins
@@ -229,9 +238,10 @@ $ python my_plugin.py --help
 ```
 
 ## Release notes
-### v1.2 (HEAD, unreleased)
+### v2.0, 2020-12
 - `plugin_folder`: introduce `.priority` folder to prioritize images #40
 - mics: removed dependency on internal pip api #38
+- use postcard_creator 2.0 to fix issues with swissid authentication method #46
 
 ### v1.1, 2020-01-30
 - update to postcard-creator 1.1. swissid authentication is now supported

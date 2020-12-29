@@ -13,6 +13,8 @@ import urllib
 import inflection
 import random
 import pkg_resources
+from postcards import __version__
+from postcard_creator import __version__ as postcard_creator_version
 
 LOGGING_TRACE_LVL = 5
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
@@ -44,7 +46,8 @@ class Postcards:
         self.logger.trace(argv)
         args = parser.parse_args()
         self._configure_logging(self.logger, args.verbose_count)
-        self.logger.trace(args)
+        self.logger.info(f'postcards {__version__} with postcard-creator {postcard_creator_version}')
+        self.logger.debug(args)
 
         if args.mode == 'generate':
             self.do_command_generate(args)
@@ -181,7 +184,7 @@ class Postcards:
                         break
                 else:
                     next_quota = pcc.get_quota().get('next')
-                    if next_quota < try_again_after or try_again_after is '':
+                    if next_quota < try_again_after or try_again_after == '':
                         try_again_after = next_quota
 
                     self.logger.debug('account {} is invalid. '.format(account.get("username")) +
@@ -420,7 +423,7 @@ class Postcards:
         parser_send.add_argument('-m', '--message',
                                  default='',
                                  type=str,
-                                 nargs=argparse.PARSER,  # treat arg as one string, not array
+                                 nargs=1,
                                  help='postcard message. you can use HTML tags to format the message (e.g. <br/>).',
                                  dest='message')
 
@@ -468,7 +471,6 @@ class Postcards:
             result = ' '.join(str(x) for x in message)
         elif isinstance(message, str):
             result = message
-
         return result
 
     def get_img_and_text(self, plugin_payload, cli_args):
