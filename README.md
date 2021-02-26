@@ -241,7 +241,7 @@ $ python my_plugin.py --help
 - mics: removed dependency on internal pip api #38
 - use postcard_creator 2.0 to fix issues with swissid authentication method #46
 - fix message parsing issue #41
-- 
+
 ### v1.1, 2020-01-30
 - update to postcard-creator 1.1. swissid authentication is now supported
 
