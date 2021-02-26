@@ -236,7 +236,7 @@ $ python my_plugin.py --help
 ```
 
 ## Release notes
-### v2.0, 2021-02
+### v2.0, 2021-02 #49
 - `plugin_folder`: introduce `.priority` folder to prioritize images #40
 - mics: removed dependency on internal pip api #38
 - use postcard_creator 2.0 to fix issues with swissid authentication method #46
