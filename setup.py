@@ -3,6 +3,7 @@ from setuptools import setup, find_packages
 import codecs
 import os
 import re
+from postcards import __version__
 
 here = os.path.abspath(os.path.dirname(__file__))
 reqs = None
@@ -24,7 +25,7 @@ def find_version(*file_paths):
 
 setup(
     name='postcards',
-    version='1.1',
+    version=__version__,
     url='http://github.com/abertschi/postcards',
     author='Andrin Bertschi',
     description='A CLI for the Swiss Postcard Creator',
