@@ -160,7 +160,7 @@ Create a YAML file in the following format;
 - For all `i modulo 2 == 0`, `i >= 0`
 - The absolute location of the image consists of the `folder` path in `config.json` and the image location in the YAML file.
 - Entries are removed from the YAML file if a postcard is sent.
-- Entries are picked as the appear in the YAML file.
+- Entries are picked as they appear in the YAML file.
 
 #### Example
 ```
