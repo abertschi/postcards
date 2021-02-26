@@ -111,3 +111,4 @@ pictures
 run.sh
 tmp/
 dist/
+tmp-venv/

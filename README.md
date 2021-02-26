@@ -1,5 +1,3 @@
-postcard_creator_wrapper is currently malfunctioning. track the state here: https://github.com/abertschi/postcard_creator_wrapper/issues/20
-
 # Postcards [![PyPI version](https://img.shields.io/pypi/v/postcards.svg)](https://badge.fury.io/py/postcards)
 
 Postcards is a set of python scripts that allow you to send postcards with the Swiss Postcard Creator.
@@ -238,7 +236,7 @@ $ python my_plugin.py --help
 ```
 
 ## Release notes
-### v2.0, 2020-12
+### v2.0, 2021-02
 - `plugin_folder`: introduce `.priority` folder to prioritize images #40
 - mics: removed dependency on internal pip api #38
 - use postcard_creator 2.0 to fix issues with swissid authentication method #46
