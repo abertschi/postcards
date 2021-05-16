@@ -13,9 +13,9 @@ pypexels==1.0.0b4
 python-resize-image==1.1.11
 pytz==2017.3
 PyYAML==5.3
-requests==2.22.0
-requests-toolbelt==0.8.0
 six==1.11.0
 tzlocal==1.4
 urllib3==1.25.8
-postcard-creator==2.0
+postcard-creator==2.1
+requests
+requests-toolbelt

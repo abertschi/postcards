@@ -236,6 +236,9 @@ $ python my_plugin.py --help
 ```
 
 ## Release notes
+### v2.1, 2021-05-16
+- update postcard-creator-wrapper to v2.1
+
 ### v2.0, 2021-02 #49
 - `plugin_folder`: introduce `.priority` folder to prioritize images #40
 - mics: removed dependency on internal pip api #38
