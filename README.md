@@ -234,6 +234,13 @@ if __name__ == '__main__':
 ```sh
 $ python my_plugin.py --help
 ```
+## FAQ
+### Something does not work, can you help?
+- 1 Update to latest version
+- 2 Check current issues for workaround steps
+  - https://github.com/abertschi/postcard_creator_wrapper/issues
+  - https://github.com/abertschi/postcards/issues
+- 3 File a new issue 
 
 ## Release notes
 ### v2.1, 2021-05-16
