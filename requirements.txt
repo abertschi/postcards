@@ -7,7 +7,6 @@ inflection==0.3.1
 Js2Py==0.50
 nltk==3.4.5
 olefile==0.44
-Pillow==6.2.0
 pyjsparser==2.5.2
 pypexels==1.0.0b4
 python-resize-image==1.1.11
@@ -16,6 +15,7 @@ PyYAML==5.3
 six==1.11.0
 tzlocal==1.4
 urllib3==1.25.8
-postcard-creator==2.1
 requests
 requests-toolbelt
+Pillow==8.3.1
+postcard-creator==2.2
