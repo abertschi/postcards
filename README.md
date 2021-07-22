@@ -67,7 +67,7 @@ Issue `postcards send --help` for more information about sending postcards.
 # Send a postcard
 $ postcards send --config config.json \
     --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
-    --message "Happy <br/> coding!"
+    --message "Happy coding!"
 
 
 # Encrypt user passwords to store in configuration file
@@ -83,7 +83,7 @@ $ postcards send --config config.json \
 # Increase verbosity
 $ postcards -v send --config config.json \
     --picture https://images.pexels.com/photos/365434/pexels-photo-365434.jpeg \
-    --message "Happy <br/> coding!"
+    --message "Happy coding!"
 
 # - Add more 'v' to increase verbosity, i.e. -vv
 # - Note: The -v / --verbose flag belongs to the root parser, add it after 'postcards' and before 'send'     
