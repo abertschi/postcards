@@ -243,6 +243,9 @@ $ python my_plugin.py --help
 - 3 File a new issue 
 
 ## Release notes
+### v2.3, 2022-10-04
+- update postcard-creator-wrapper to v2.3
+
 ### v2.2, 2021-07-07
 - update postcard-creator-wrapper to v2.2
 
