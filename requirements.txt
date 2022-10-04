@@ -5,7 +5,7 @@ cookies==2.2.1
 idna==2.6
 inflection==0.3.1
 Js2Py==0.50
-nltk==3.4.5
+nltk==3.6.6
 olefile==0.44
 pyjsparser==2.5.2
 pypexels==1.0.0b4
