@@ -243,6 +243,9 @@ $ python my_plugin.py --help
 - 3 File a new issue 
 
 ## Release notes
+### v2.4, 2022-10-04
+- change dependency freeze mechanism to pipreqs, update all dependencies to the latest version
+
 ### v2.3, 2022-10-04
 - update postcard-creator-wrapper to v2.3
 
@@ -289,6 +292,18 @@ $ python my_plugin.py --help
 ```sh
 pip install -r requirements-dev.txt
 pip install -e .
+```
+
+To capture dependencies, we use pipreqs
+```
+cd <project root>
+pipreqs --force
+```
+
+To release a new version:
+```
+python setup.py sdist
+twine upload dist/* 
 ```
 
 ## Related
