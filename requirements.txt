@@ -2,7 +2,7 @@ beautifulsoup4==4.11.1
 inflection==0.5.1
 js2py==0.71
 nltk==3.7
-Pillow==9.2.0
+Pillow==9.3.0
 postcard_creator==2.3
 pypexels==1.0.0rc1
 PyYAML==6.0
