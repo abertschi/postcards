@@ -6,4 +6,4 @@ Pillow==9.2.0
 postcard_creator==2.3
 pypexels==1.0.0rc1
 PyYAML==6.0
-setuptools==65.4.1
+setuptools==65.5.1
