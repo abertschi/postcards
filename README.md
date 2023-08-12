@@ -243,6 +243,9 @@ $ python my_plugin.py --help
 - 3 File a new issue 
 
 ## Release notes
+### v2.5, 2023-08-12
+- update postcard-creator-wrapper to v2.4
+
 ### v2.4, 2022-10-04
 - change dependency freeze mechanism to pipreqs, update all dependencies to the latest version
 

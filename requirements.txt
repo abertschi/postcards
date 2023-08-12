@@ -3,7 +3,7 @@ inflection==0.5.1
 js2py==0.71
 nltk==3.7
 Pillow==9.2.0
-postcard_creator==2.3
+postcard_creator==2.4
 pypexels==1.0.0rc1
 PyYAML==6.0
 setuptools==65.4.1
